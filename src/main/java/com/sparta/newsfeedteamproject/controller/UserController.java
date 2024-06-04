@@ -19,6 +19,6 @@ public class UserController {
     @PostMapping("/signup")
     public BaseResDto signup(@RequestBody SignupReqDto reqDto) {
         userService.signup(reqDto);
-        return new BaseResDto();
+        return new BaseResDto("회원가입이 완료되었습니다!",200);
     }
 }

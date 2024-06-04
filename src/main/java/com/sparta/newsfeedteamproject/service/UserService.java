@@ -38,5 +38,6 @@ public class UserService {
         Status status = Status.ACTIVATE;
 
         User user = new User(login_id,password,name,email,user_info,status);
+        userRepository.save(user);
     }
 }
