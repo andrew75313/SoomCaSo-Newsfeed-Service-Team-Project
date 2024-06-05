@@ -47,4 +47,17 @@ public class JwtProvider {
                         .signWith(key, signatureAlgorithm)
                         .compact();
     }
+
+    public String createRefreshToken(String username, Status status) {
+        Date date = new Date();
+
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setSubject(username)
+                        .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
+                        .claim(AUTHORIZATION_KEY, status)
+                        .setIssuedAt(date)
+                        .signWith(key, signatureAlgorithm)
+                        .compact();
+    }
 }
