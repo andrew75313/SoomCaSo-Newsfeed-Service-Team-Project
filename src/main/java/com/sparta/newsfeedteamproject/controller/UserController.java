@@ -4,6 +4,7 @@ import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.dto.user.ProfileResDto;
 import com.sparta.newsfeedteamproject.dto.user.SignupReqDto;
 import com.sparta.newsfeedteamproject.dto.user.UpdateReqDto;
+import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import com.sparta.newsfeedteamproject.service.UserService;
 import jakarta.validation.Valid;
@@ -24,9 +25,16 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<BaseResDto> signup(@RequestBody @Valid SignupReqDto reqDto) {
         userService.signup(reqDto);
-        BaseResDto<String> responseDto = new BaseResDto<>(HttpStatus.OK.value(), "회원가입이 완료되었습니다!");
+        BaseResDto responseDto = new BaseResDto(HttpStatus.OK.value(), "회원가입이 완료되었습니다!");
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
 
+    }
+
+    @PutMapping("/status")
+    public ResponseEntity<BaseResDto> withdraw(@RequestBody @Valid UserAuthReqDto reqDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.withdraw(reqDto,userDetails);
+        BaseResDto responseDto = new BaseResDto(HttpStatus.OK.value(), "회원 탈퇴가 완료되었습니다!");
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PostMapping("/logout")
