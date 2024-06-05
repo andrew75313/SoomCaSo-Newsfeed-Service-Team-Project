@@ -45,4 +45,11 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @DeleteMapping("/feeds/{feed_id}")
+    public ResponseEntity<BaseResDto<FeedResDto>> deleteFeed(@PathVariable(name = "feed_id") Long feed_id,
+                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BaseResDto<FeedResDto> response =  feedService.deleteFeed(feed_id, userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

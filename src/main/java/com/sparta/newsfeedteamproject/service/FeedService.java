@@ -55,6 +55,18 @@ public class FeedService {
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 수정이 완료되었습니다!", new FeedResDto(feed));
     }
 
+    public BaseResDto<FeedResDto> deleteFeed(Long feed_id, User user) {
 
+        Feed feed = feedRepository.findById(feed_id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
+        );
 
+        if (feed.getUser().getId() == user.getId()) {
+            throw new IllegalArgumentException("해당 게시물은 작성자만 수정/삭제 할 수 있습니다!");
+        }
+
+        feedRepository.delete(feed);
+
+        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 삭제가 완료되었습니다!", null);
+    }
 }
