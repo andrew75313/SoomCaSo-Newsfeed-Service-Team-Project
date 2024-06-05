@@ -62,8 +62,8 @@ public class JwtProvider {
                         .compact();
     }
 
-    public String getJwtFromHeader(HttpServletRequest request, String tokenHeaderValue) {
-        String bearerToken = request.getHeader(tokenHeaderValue);
+    public String getJwtFromHeader(HttpServletRequest request, String token) {
+        String bearerToken = request.getHeader(token);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
@@ -84,5 +84,9 @@ public class JwtProvider {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
         return false;
+    }
+
+    public Claims getUserInfoFromToken(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 }
