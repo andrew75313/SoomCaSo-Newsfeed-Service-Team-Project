@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
-public class BaseResDto<T> { // JSON 만 보내주는 역할
+public class BaseResDto<T> {
 
     private Integer statusCode;
     private String message;

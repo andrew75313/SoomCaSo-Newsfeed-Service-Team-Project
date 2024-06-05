@@ -36,6 +36,13 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PutMapping("/feeds/{feed_id}")
+    public ResponseEntity<BaseResDto<FeedResDto>> updateFeed(@PathVariable(name = "feed_id") Long feed_id,
+                                                             @Valid @RequestBody FeedReqDto reqDto,
+                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BaseResDto<FeedResDto> response =  feedService.updateFeed(feed_id, reqDto, userDetails.getUser();
 
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 }

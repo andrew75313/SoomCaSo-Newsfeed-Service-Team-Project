@@ -1,5 +1,6 @@
 package com.sparta.newsfeedteamproject.entity;
 
+import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +20,8 @@ public class Feed extends Timestamp {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public void update(FeedReqDto reqDto) {
+        this.contents = reqDto.getContents();
+    }
 }

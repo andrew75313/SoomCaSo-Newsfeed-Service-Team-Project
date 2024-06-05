@@ -7,6 +7,7 @@ import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.repository.FeedRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,4 +38,23 @@ public class FeedService {
 
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 작성이 완료되었습니다!", new FeedResDto(feed));
     }
+
+    @Transactional
+    public BaseResDto<FeedResDto> updateFeed(Long feed_id, FeedReqDto reqDto, User user) {
+
+        Feed feed = feedRepository.findById(feed_id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
+        );
+
+        if (feed.getUser().getId() == user.getId()) {
+            throw new IllegalArgumentException("해당 게시물은 작성자만 수정/삭제 할 수 있습니다!");
+        }
+
+        feed.update(reqDto);
+
+        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 수정이 완료되었습니다!", new FeedResDto(feed));
+    }
+
+
+
 }
