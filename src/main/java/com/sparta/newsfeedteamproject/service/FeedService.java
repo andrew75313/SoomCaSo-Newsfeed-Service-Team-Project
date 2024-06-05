@@ -33,11 +33,9 @@ public class FeedService {
         return new BaseResDto<>(HttpStatus.OK.value(), message, feedList);
     }
 
-    public BaseResDto<FeedResDto> getFeed(Long feedId) {
+    public BaseResDto<FeedResDto> getFeed(Long feed_id) {
 
-        Feed feed = feedRepository.findById(feed_id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
-        );
+        Feed feed = findFeed(feed_id);
 
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", new FeedResDto(feed));
     }
@@ -52,11 +50,9 @@ public class FeedService {
     @Transactional
     public BaseResDto<FeedResDto> updateFeed(Long feed_id, FeedReqDto reqDto, User user) {
 
-        Feed feed = feedRepository.findById(feed_id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
-        );
+        Feed feed = findFeed(feed_id);
 
-        if (feed.getUser().getId() == user.getId()) {
+        if (!feed.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("해당 게시물은 작성자만 수정/삭제 할 수 있습니다!");
         }
 
@@ -67,16 +63,23 @@ public class FeedService {
 
     public BaseResDto<FeedResDto> deleteFeed(Long feed_id, User user) {
 
-        Feed feed = feedRepository.findById(feed_id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
-        );
+        Feed feed = findFeed(feed_id);
 
-        if (feed.getUser().getId() == user.getId()) {
+        if (!feed.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("해당 게시물은 작성자만 수정/삭제 할 수 있습니다!");
         }
 
         feedRepository.delete(feed);
 
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 삭제가 완료되었습니다!", null);
+    }
+
+    private Feed findFeed(Long feed_id) {
+
+        Feed feed = feedRepository.findById(feed_id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
+        );
+
+        return feed;
     }
 }
