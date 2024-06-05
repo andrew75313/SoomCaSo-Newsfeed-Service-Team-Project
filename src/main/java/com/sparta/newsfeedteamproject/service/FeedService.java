@@ -32,6 +32,15 @@ public class FeedService {
         return new BaseResDto<>(HttpStatus.OK.value(), message, feedList);
     }
 
+    public BaseResDto<FeedResDto> getfeed(Long feedId) {
+
+        Feed feed = feedRepository.findById(feed_id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
+        );
+
+        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", new FeedResDto(feed));
+    }
+
     public BaseResDto<FeedResDto> createFeed(FeedReqDto reqDto, User user) {
 
         Feed feed = feedRepository.save(new Feed(reqDto, user));

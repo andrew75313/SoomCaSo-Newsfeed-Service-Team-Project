@@ -26,7 +26,15 @@ public class FeedController {
     @GetMapping("/feeds/all")
     public ResponseEntity<BaseResDto<List<FeedResDto>>> getAllFeeds() {
 
-        BaseResDto<List<FeedResDto>> response =  feedService.getAllFeeds();
+        BaseResDto<List<FeedResDto>> response = feedService.getAllFeeds();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/feeds/{feed_id}")
+    public ResponseEntity<BaseResDto<FeedResDto>> updateFeed(@PathVariable(name = "feed_id") Long feed_id) {
+
+        BaseResDto<FeedResDto> response = feedService.getfeed(feed_id);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -35,7 +43,7 @@ public class FeedController {
     public ResponseEntity<BaseResDto<FeedResDto>> createFeed(@Valid @RequestBody FeedReqDto reqDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        BaseResDto<FeedResDto> response =  feedService.createFeed(reqDto, userDetails.getUser());
+        BaseResDto<FeedResDto> response = feedService.createFeed(reqDto, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -45,7 +53,7 @@ public class FeedController {
                                                              @Valid @RequestBody FeedReqDto reqDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        BaseResDto<FeedResDto> response =  feedService.updateFeed(feed_id, reqDto, userDetails.getUser());
+        BaseResDto<FeedResDto> response = feedService.updateFeed(feed_id, reqDto, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -54,7 +62,7 @@ public class FeedController {
     public ResponseEntity<BaseResDto<FeedResDto>> deleteFeed(@PathVariable(name = "feed_id") Long feed_id,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        BaseResDto<FeedResDto> response =  feedService.deleteFeed(feed_id, userDetails.getUser());
+        BaseResDto<FeedResDto> response = feedService.deleteFeed(feed_id, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
