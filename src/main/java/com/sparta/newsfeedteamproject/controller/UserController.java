@@ -22,10 +22,11 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<BaseResDto> signup(@RequestBody SignupReqDto reqDto) {
-            userService.signup(reqDto);
-            BaseResDto<String> responseDto = new BaseResDto<>(HttpStatus.OK.value(),"회원가입이 완료되었습니다!");
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        userService.signup(reqDto);
+        BaseResDto<String> responseDto = new BaseResDto<>(HttpStatus.OK.value(), "회원가입이 완료되었습니다!");
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
 
+    }
     @PostMapping("/logout")
     public ResponseEntity<BaseResDto> logout(UserDetailsImpl userDetails) {
         userService.logout(userDetails);
