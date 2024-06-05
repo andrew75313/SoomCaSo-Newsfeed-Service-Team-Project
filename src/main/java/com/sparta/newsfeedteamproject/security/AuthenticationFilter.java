@@ -47,7 +47,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 //            auth.getDetails() == ((UserDetailsImpl) auth.getPrincipal())
 
             //유저 상태 확인
-            if("ACTIVATE".equals(userDetails.getUser().getStatus())){
+            if(!"ACTIVATE".equals(userDetails.getUser().getStatus())){
                 log.error("탈퇴한 회원");
                 throw new AccountStatusException("탈퇴한 회원입니다.") {
                     @Override
