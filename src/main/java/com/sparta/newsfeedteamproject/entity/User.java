@@ -44,14 +44,20 @@ public class User extends Timestamp{
         this.status = status;
         this.statusModTime = statusModTime;
     }
-  
+
+    public User(Status status, LocalDateTime statusModTime) {
+        this.status = status;
+        this.statusModTime = statusModTime;
+    }
+
     public void deleteRefreshToken() {
          this.refreshToken = "";
     }
 
-    public void update(String name, String userInfo, String newPassword) {
+    public void update(String name, String userInfo, String newPassword, LocalDateTime modifiedAt) {
         this.name = name;
         this.userInfo = userInfo;
         this.password = newPassword;
+        this.setModifiedAt(modifiedAt);
     }
 }
