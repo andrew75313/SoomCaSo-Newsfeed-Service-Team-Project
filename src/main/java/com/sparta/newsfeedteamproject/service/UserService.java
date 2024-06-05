@@ -7,7 +7,8 @@ import com.sparta.newsfeedteamproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -41,5 +42,11 @@ public class UserService {
 
         User user = new User(username,password,name,email,userInfo,status,statusModTime);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void logout(UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        user.deleteRefreshToken();
     }
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -44,5 +43,9 @@ public class User extends Timestamp{
         this.userInfo = userInfo;
         this.status = status;
         this.statusModTime = statusModTime;
+    }
+  
+    public void deleteRefreshToken() {
+         this.refreshToken = "";
     }
 }
