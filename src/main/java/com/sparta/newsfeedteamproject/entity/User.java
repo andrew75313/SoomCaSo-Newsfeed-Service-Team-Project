@@ -17,8 +17,8 @@ public class User extends Timestamp{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false,name = "login_id")
-    private String loginId;
+    @Column(unique = true, nullable = false,name = "username")
+    private String username;
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
@@ -36,8 +36,8 @@ public class User extends Timestamp{
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime statusModTime;
 
-    public User(String loginId, String password, String name, String email, String userInfo, Status status, LocalDateTime statusModTime) {
-        this.loginId = loginId;
+    public User(String username, String password, String name, String email, String userInfo, Status status, LocalDateTime statusModTime) {
+        this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
