@@ -73,10 +73,10 @@ public class JwtProvider {
 
     public String getJwtFromHeader(HttpServletRequest request, String token) {
         String bearerToken = request.getHeader(token);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+        if (!StringUtils.hasText(bearerToken) && !bearerToken.startsWith(BEARER_PREFIX)) {
+            throw new IllegalArgumentException("Header에 token이 없습니다.");
         }
-        return null;
+        return bearerToken.substring(7);
     }
 
     public boolean isTokenValidate(String token) {
