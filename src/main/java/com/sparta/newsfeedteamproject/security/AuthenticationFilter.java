@@ -2,6 +2,7 @@ package com.sparta.newsfeedteamproject.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
+import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
 import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,10 +17,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtProvider jwtProvider;
 
-    public JwtAuthenticationFilter(JwtProvider jwtProvider) {
+    public AuthenticationFilter(JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
         setFilterProcessesUrl("/users/login");
     }
@@ -39,8 +40,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             );
         } catch (IOException e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            FilterExceptionHandler.handleExceptionInFilter(response,e);
         }
+        return null;
     }
 
     @Override
