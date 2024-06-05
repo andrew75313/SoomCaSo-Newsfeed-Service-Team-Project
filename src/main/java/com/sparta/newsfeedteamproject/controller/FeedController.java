@@ -32,9 +32,9 @@ public class FeedController {
     }
 
     @GetMapping("/feeds/{feed_id}")
-    public ResponseEntity<BaseResDto<FeedResDto>> updateFeed(@PathVariable(name = "feed_id") Long feed_id) {
+    public ResponseEntity<BaseResDto<FeedResDto>> getFeed(@PathVariable(name = "feed_id") Long feed_id) {
 
-        BaseResDto<FeedResDto> response = feedService.getfeed(feed_id);
+        BaseResDto<FeedResDto> response = feedService.getFeed(feed_id);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

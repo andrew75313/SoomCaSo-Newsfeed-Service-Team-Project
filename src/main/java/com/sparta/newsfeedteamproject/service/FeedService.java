@@ -4,6 +4,7 @@ import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
 import com.sparta.newsfeedteamproject.entity.Feed;
+import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.repository.FeedRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class FeedService {
         return new BaseResDto<>(HttpStatus.OK.value(), message, feedList);
     }
 
-    public BaseResDto<FeedResDto> getfeed(Long feedId) {
+    public BaseResDto<FeedResDto> getFeed(Long feedId) {
 
         Feed feed = feedRepository.findById(feed_id).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
