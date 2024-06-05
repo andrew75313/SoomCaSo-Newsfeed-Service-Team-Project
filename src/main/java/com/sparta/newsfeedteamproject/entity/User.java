@@ -48,4 +48,10 @@ public class User extends Timestamp{
     public void deleteRefreshToken() {
          this.refreshToken = "";
     }
+
+    public void update(String name, String userInfo, String newPassword) {
+        this.name = name;
+        this.userInfo = userInfo;
+        this.password = newPassword;
+    }
 }
