@@ -9,19 +9,20 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class BaseResDto<T> {
 
-    private Integer statusCode;
+    private int statusCode;
     private String message;
     private T data;
 
-    public BaseResDto(Integer statusCode, String message, T data) {
+    public BaseResDto(int statusCode, String message, T data) {
         this.statusCode = statusCode;
         this.message = message;
         this.data = data;
     }
 
-    public BaseResDto(int statusCode,String msg, T data) {
+    public BaseResDto(int statusCode,String message) {
         this.statusCode = statusCode;
-        this.msg = msg;
-        this.data = data;
+        this.message = message;
     }
+
+
 }
