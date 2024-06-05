@@ -1,7 +1,9 @@
 package com.sparta.newsfeedteamproject.service;
 
 import com.sparta.newsfeedteamproject.dto.BaseResDto;
+import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
+import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.repository.FeedRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,6 @@ public class FeedService {
         this.feedRepository = feedRepository;
     }
 
-    // 게시글 조회
     public BaseResDto<List<FeedResDto>> getAllFeeds() {
 
         List<FeedResDto> feedList = feedRepository.findAllByOrderByCreatedAtDesc().stream()
@@ -28,5 +29,12 @@ public class FeedService {
         String message = feedList.isEmpty() ? "게시물 조회가 완료되었습니다!" : "먼저 작성하여 소식을 알려보세요!";
 
         return new BaseResDto<>(HttpStatus.OK.value(), message, feedList);
+    }
+
+    public BaseResDto<FeedResDto> createFeed(FeedReqDto reqDto, User user) {
+
+        Feed feed = feedRepository.save(new Feed(reqDto, user));
+
+        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 작성이 완료되었습니다!", new FeedResDto(feed));
     }
 }

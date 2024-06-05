@@ -1,13 +1,14 @@
 package com.sparta.newsfeedteamproject.controller;
 
 import com.sparta.newsfeedteamproject.dto.BaseResDto;
+import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
+import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import com.sparta.newsfeedteamproject.service.FeedService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,9 +22,16 @@ public class FeedController {
         this.feedService = feedService;
     }
 
-    @GetMapping("/feed/all")
+    @GetMapping("/feeds/all")
     public ResponseEntity<BaseResDto<List<FeedResDto>>> getAllFeeds() {
         BaseResDto<List<FeedResDto>> response =  feedService.getAllFeeds();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/feeds")
+    public ResponseEntity<BaseResDto<FeedResDto>> createFeed(@RequestBody FeedReqDto reqDto,
+                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BaseResDto<FeedResDto> response =  feedService.createFeed(reqDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
