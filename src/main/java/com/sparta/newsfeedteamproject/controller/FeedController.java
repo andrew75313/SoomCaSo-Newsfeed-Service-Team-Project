@@ -25,14 +25,18 @@ public class FeedController {
 
     @GetMapping("/feeds/all")
     public ResponseEntity<BaseResDto<List<FeedResDto>>> getAllFeeds() {
+
         BaseResDto<List<FeedResDto>> response =  feedService.getAllFeeds();
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/feeds")
     public ResponseEntity<BaseResDto<FeedResDto>> createFeed(@Valid @RequestBody FeedReqDto reqDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
         BaseResDto<FeedResDto> response =  feedService.createFeed(reqDto, userDetails.getUser());
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -40,7 +44,8 @@ public class FeedController {
     public ResponseEntity<BaseResDto<FeedResDto>> updateFeed(@PathVariable(name = "feed_id") Long feed_id,
                                                              @Valid @RequestBody FeedReqDto reqDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        BaseResDto<FeedResDto> response =  feedService.updateFeed(feed_id, reqDto, userDetails.getUser();
+
+        BaseResDto<FeedResDto> response =  feedService.updateFeed(feed_id, reqDto, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -48,6 +53,7 @@ public class FeedController {
     @DeleteMapping("/feeds/{feed_id}")
     public ResponseEntity<BaseResDto<FeedResDto>> deleteFeed(@PathVariable(name = "feed_id") Long feed_id,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
         BaseResDto<FeedResDto> response =  feedService.deleteFeed(feed_id, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
