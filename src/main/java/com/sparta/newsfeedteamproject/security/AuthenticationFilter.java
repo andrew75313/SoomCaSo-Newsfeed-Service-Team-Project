@@ -2,6 +2,7 @@ package com.sparta.newsfeedteamproject.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
+import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
 import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import com.sparta.newsfeedteamproject.repository.UserRepository;

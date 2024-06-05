@@ -65,7 +65,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             Claims info = jwtProvider.getUserInfoFromToken(accessTokenValue);
 
             //토큰 재생성
-            reCreateTokens(info.getSubject());
+            jwtProvider.reCreateTokens(info.getSubject(),res);
 
             log.info("토큰 재생성 완료");
 
