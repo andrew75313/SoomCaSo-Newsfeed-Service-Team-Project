@@ -9,7 +9,7 @@ public class SignupReqDto {
     @NotBlank
     @Size(min = 10, max = 20)
     @Pattern(regexp = "^[0-9a-zA-Z]+$")
-    private String login_id;
+    private String loginId;
     @NotBlank
     @Size(min = 10)
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{10,}$")
@@ -19,5 +19,5 @@ public class SignupReqDto {
     @NotBlank
     @Email
     private String email;
-    private String user_info;
+    private String userInfo;
 }

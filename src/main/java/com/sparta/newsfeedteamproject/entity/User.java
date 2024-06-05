@@ -17,31 +17,32 @@ public class User extends Timestamp{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false)
-    private String login_id;
+    @Column(unique = true, nullable = false,name = "login_id")
+    private String loginId;
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
     private String name;
     @Column(unique = true, nullable = false)
     private String email;
-    @Column
-    private String user_info;
+    @Column(name = "user_info")
+    private String userInfo;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
-    @Column
-    private String refresh_token;
-    @Column(nullable = false)
+    @Column(name = "refresh_token")
+    private String refreshToken;
+    @Column(nullable = false,name = "status_mod_time")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime status_mod_time;
+    private LocalDateTime statusModTime;
 
-    public User(String loginId, String password, String name, String email, String userInfo, Status status) {
-        this.login_id = loginId;
+    public User(String loginId, String password, String name, String email, String userInfo, Status status, LocalDateTime statusModTime) {
+        this.loginId = loginId;
         this.password = password;
         this.name = name;
         this.email = email;
-        this.user_info = userInfo;
+        this.userInfo = userInfo;
         this.status = status;
+        this.statusModTime = statusModTime;
     }
 }
