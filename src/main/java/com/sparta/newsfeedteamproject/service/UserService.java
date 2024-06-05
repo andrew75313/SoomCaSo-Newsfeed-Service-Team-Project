@@ -1,14 +1,17 @@
 package com.sparta.newsfeedteamproject.service;
 
+import com.sparta.newsfeedteamproject.dto.user.ProfileResDto;
 import com.sparta.newsfeedteamproject.dto.user.SignupReqDto;
+import com.sparta.newsfeedteamproject.dto.user.UpdateReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.repository.UserRepository;
+import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -42,6 +45,37 @@ public class UserService {
 
         User user = new User(username,password,name,email,userInfo,status,statusModTime);
         userRepository.save(user);
+    }
+
+    public ProfileResDto getProfile(Long userId) {
+        User checkUser = userRepository.findById(userId).orElseThrow(
+                ()-> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+        );
+        return new ProfileResDto(checkUser);
+    }
+
+    public ProfileResDto editProfile(UpdateReqDto reqDto, UserDetailsImpl userDetails) {
+
+        String username = userDetails.getUser().getUsername();
+
+        User checkUser = userRepository.findByUsername(username).orElseThrow(
+                ()-> new IllegalArgumentException("존재하지 않는 사용자입니다.")
+        );
+
+        String password = userDetails.getUser().getPassword();
+
+        if(!bCryptPasswordEncoder.matches(reqDto.getPassword(),password)){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않아 프로필 수정이 불가능합니다.");
+        }
+
+        String name = reqDto.getName();
+        String userInfo = reqDto.getUserInfo();
+        String newPassword = bCryptPasswordEncoder.encode(reqDto.getNewPassword());
+
+        checkUser.update(name,userInfo,newPassword);
+        userRepository.save(checkUser);
+
+        return new ProfileResDto(checkUser);
     }
 
     @Transactional
