@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 public abstract class Timestamp {
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(nullable = false,name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
     @LastModifiedDate
-    @Column
+    @Column(nullable = false,name = "modified_at")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
 }
