@@ -1,4 +1,10 @@
 package com.sparta.newsfeedteamproject.repository;
 
-public class FeedRepository {
+import com.sparta.newsfeedteamproject.entity.Feed;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface FeedRepository extends JpaRepository<Feed, Long> {
+    List<Feed> findAllByOrderByCreatedAtDesc();
 }
