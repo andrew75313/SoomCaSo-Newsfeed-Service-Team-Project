@@ -5,7 +5,6 @@ import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
 import com.sparta.newsfeedteamproject.jwt.JwtProvider;
-import com.sparta.newsfeedteamproject.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +21,9 @@ import java.io.IOException;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtProvider jwtProvider;
-    private final UserDetailsImpl userDetails;
 
-    public AuthenticationFilter(JwtProvider jwtProvider, UserDetailsImpl userDetails) {
+    public AuthenticationFilter(JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
-        this.userDetails = userDetails;
         setFilterProcessesUrl("/users/login");
     }
 
@@ -44,10 +41,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                             null
                     )
             );
-//            auth.getDetails() == ((UserDetailsImpl) auth.getPrincipal())
 
             //유저 상태 확인
-            if("ACTIVATE".equals(userDetails.getUser().getStatus())){
+            if(!"ACTIVATE".equals(((UserDetailsImpl) auth.getPrincipal()).getUser().getStatus())){
                 log.error("탈퇴한 회원");
                 throw new AccountStatusException("탈퇴한 회원입니다.") {
                     @Override
