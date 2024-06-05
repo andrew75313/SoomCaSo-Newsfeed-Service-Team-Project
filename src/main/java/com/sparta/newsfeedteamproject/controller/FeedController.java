@@ -5,6 +5,7 @@ import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import com.sparta.newsfeedteamproject.service.FeedService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,10 +30,12 @@ public class FeedController {
     }
 
     @PostMapping("/feeds")
-    public ResponseEntity<BaseResDto<FeedResDto>> createFeed(@RequestBody FeedReqDto reqDto,
+    public ResponseEntity<BaseResDto<FeedResDto>> createFeed(@Valid @RequestBody FeedReqDto reqDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
         BaseResDto<FeedResDto> response =  feedService.createFeed(reqDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+
 
 }
