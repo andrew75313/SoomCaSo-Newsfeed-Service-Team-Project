@@ -21,6 +21,11 @@ public class Feed extends Timestamp {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public Feed(FeedReqDto reqDto, User user) {
+        this.contents = reqDto.getContents();
+        this.user = user;
+    }
+
     public void update(FeedReqDto reqDto) {
         this.contents = reqDto.getContents();
     }
