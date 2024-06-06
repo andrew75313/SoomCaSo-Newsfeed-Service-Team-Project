@@ -27,6 +27,7 @@ public class SecurityConfig {
 
     public SecurityConfig(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService, AuthenticationConfiguration authenticationConfiguration) {
         this.jwtProvider = jwtProvider;
+
         this.userDetailsService = userDetailsService;
         this.authenticationConfiguration = authenticationConfiguration;
     }
@@ -43,14 +44,14 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationFilter authenticationFilter() throws Exception {
-        AuthenticationFilter filter = new AuthenticationFilter(jwtProvider);
+        AuthenticationFilter filter = new AuthenticationFilter(jwtProvider, userDetailsService);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
 
     @Bean
     public AuthorizationFilter authorizationFilter() {
-        return new authorizationFilter(jwtProvider, userDetailsService);
+        return new AuthorizationFilter(jwtProvider, userDetailsService);
     }
 
     @Bean
@@ -62,7 +63,8 @@ public class SecurityConfig {
         );
 
         http.authorizeHttpRequests(
-                (authorizationHttpRequests) -> authorizationHttpRequests.requestMatchers("/user/signup", "/users/login").permitAll()
+                (authorizationHttpRequests) -> authorizationHttpRequests
+                        .requestMatchers("/user/signup", "/users/login").permitAll()
                         .requestMatchers("/users/profile/{user_id}").permitAll()
                         .requestMatchers("/feeds/{feed_id}", "/feeds/all").permitAll()
                         .anyRequest().authenticated()
