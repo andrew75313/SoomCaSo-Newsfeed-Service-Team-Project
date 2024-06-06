@@ -37,6 +37,12 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<BaseResDto> login() {
+        BaseResDto resDto = new BaseResDto(HttpStatus.OK.value(), "로그인이 완료되었습니다",null);
+        return new ResponseEntity<>(resDto, HttpStatus.NO_CONTENT);
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<BaseResDto> logout(UserDetailsImpl userDetails) {
         userService.logout(userDetails);
