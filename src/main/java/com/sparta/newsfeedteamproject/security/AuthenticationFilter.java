@@ -21,9 +21,11 @@ import java.io.IOException;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtProvider jwtProvider;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    public AuthenticationFilter(JwtProvider jwtProvider) {
+    public AuthenticationFilter(JwtProvider jwtProvider, UserDetailsServiceImpl userDetailsService) {
         this.jwtProvider = jwtProvider;
+        this.userDetailsService = userDetailsService;
         setFilterProcessesUrl("/users/login");
     }
 
@@ -34,16 +36,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         try {
             UserAuthReqDto requestDto = new ObjectMapper().readValue(request.getInputStream(), UserAuthReqDto.class);
             //로그인 시도
-            Authentication auth = getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            requestDto.getUsername(),
-                            requestDto.getPassword(),
-                            null
-                    )
-            );
 
             //유저 상태 확인
-            if(!"ACTIVATE".equals(((UserDetailsImpl) auth.getPrincipal()).getUser().getStatus())){
+            if (!Status.ACTIVATE.equals((((UserDetailsImpl) userDetailsService.loadUserByUsername(requestDto.getUsername())).getUser()).getStatus())) {
                 log.error("탈퇴한 회원");
                 throw new AccountStatusException("탈퇴한 회원입니다.") {
                     @Override
@@ -53,7 +48,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 };
             }
 
-            return auth;
+            return getAuthenticationManager().authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            requestDto.getUsername(),
+                            requestDto.getPassword(),
+                            null
+                    )
+            );
+
         } catch (IOException | AccountStatusException e) {
             log.error(e.getMessage());
             FilterExceptionHandler.handleExceptionInFilter(response,e);
