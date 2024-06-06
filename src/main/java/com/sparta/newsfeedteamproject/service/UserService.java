@@ -3,6 +3,7 @@ package com.sparta.newsfeedteamproject.service;
 import com.sparta.newsfeedteamproject.dto.user.ProfileResDto;
 import com.sparta.newsfeedteamproject.dto.user.SignupReqDto;
 import com.sparta.newsfeedteamproject.dto.user.UpdateReqDto;
+import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.repository.UserRepository;
@@ -47,10 +48,38 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void withdraw(UserAuthReqDto reqDto, UserDetailsImpl userDetails) {
+
+        String password = userDetails.getUser().getPassword();
+
+        if(!reqDto.getPassword().equals(password)){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않아 회원탈퇴가 불가능합니다.");
+        }
+
+        if(userDetails.getUser().getStatus() == Status.DEACTIVATE){
+            throw new IllegalArgumentException("이미 탈퇴된 사용자는 재탈퇴가 불가능합니다.");
+        }
+
+        Status status = Status.DEACTIVATE;
+        LocalDateTime statusModTime = LocalDateTime.now();
+
+        User user = new User(status,statusModTime);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void logout(UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        user.deleteRefreshToken();
+    }
+
     public ProfileResDto getProfile(Long userId) {
         User checkUser = userRepository.findById(userId).orElseThrow(
                 ()-> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
         );
+        if(checkUser.getStatus().equals(Status.DEACTIVATE)){
+            throw new IllegalArgumentException("탈퇴한 사용자는 프로필 조회가 불가능합니다.");
+        }
         return new ProfileResDto(checkUser);
     }
 
@@ -62,25 +91,28 @@ public class UserService {
                 ()-> new IllegalArgumentException("존재하지 않는 사용자입니다.")
         );
 
+        if(checkUser.getStatus().equals(Status.DEACTIVATE)){
+            throw new IllegalArgumentException("탈퇴한 사용자는 프로필 수정이 불가능합니다.");
+        }
+
         String password = userDetails.getUser().getPassword();
 
         if(!bCryptPasswordEncoder.matches(reqDto.getPassword(),password)){
             throw new IllegalArgumentException("비밀번호가 일치하지 않아 프로필 수정이 불가능합니다.");
         }
 
+        if(reqDto.getNewPassword().equals(password)){
+            throw new IllegalArgumentException("기존 비밀번호와 일치하여 수정이 불가능합니다.");
+        }
+
         String name = reqDto.getName();
         String userInfo = reqDto.getUserInfo();
         String newPassword = bCryptPasswordEncoder.encode(reqDto.getNewPassword());
+        LocalDateTime modifiedAt = LocalDateTime.now();
 
-        checkUser.update(name,userInfo,newPassword);
+        checkUser.update(name,userInfo,newPassword,modifiedAt);
         userRepository.save(checkUser);
 
         return new ProfileResDto(checkUser);
-    }
-
-    @Transactional
-    public void logout(UserDetailsImpl userDetails) {
-        User user = userDetails.getUser();
-        user.deleteRefreshToken();
     }
 }
