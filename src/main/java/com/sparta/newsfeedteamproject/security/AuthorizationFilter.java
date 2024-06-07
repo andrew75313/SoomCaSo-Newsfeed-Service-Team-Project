@@ -33,14 +33,14 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
-        String accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.ACCESS_TOKEN_HEADER);
-        String refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.REFRESH_TOKEN_HEADER);
+        String raw_accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.ACCESS_TOKEN_HEADER);
+        String raw_refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.REFRESH_TOKEN_HEADER);
 
-        if (StringUtils.hasText(accessTokenValue) && StringUtils.hasText(refreshTokenValue)) {
+        if (StringUtils.hasText(raw_accessTokenValue) && StringUtils.hasText(raw_refreshTokenValue)) {
             try {
                 // JWT 토큰 substring
-                accessTokenValue = jwtProvider.substringToken(accessTokenValue);
-                refreshTokenValue = jwtProvider.substringToken(refreshTokenValue);
+                String accessTokenValue = jwtProvider.substringToken(raw_accessTokenValue);
+                String refreshTokenValue = jwtProvider.substringToken(raw_refreshTokenValue);
 
                 log.info(accessTokenValue);
                 log.info(refreshTokenValue);
@@ -60,15 +60,15 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                 }
 
                 //로그아웃 요청일 땐 Header에 토큰 추가 X
-                if (!"users/logout".equals(req.getRequestURI())) {
+                if (!"/users/logout".equals(req.getRequestURI())) {
                     if ((!jwtProvider.isTokenValidate(accessTokenValue) && jwtProvider.isTokenValidate(refreshTokenValue))) //refresh만 정상일 때
                     {
                         //토큰 재생성
                         jwtProvider.reCreateTokens(info.getSubject(), res);
                         log.info("토큰 재생성 완료");
                     } else { //두 토큰 다 정상일 때
-                        res.addHeader(JwtProvider.ACCESS_TOKEN_HEADER, accessTokenValue);
-                        res.addHeader(JwtProvider.REFRESH_TOKEN_HEADER, refreshTokenValue);
+                        res.addHeader(JwtProvider.ACCESS_TOKEN_HEADER, raw_accessTokenValue);
+                        res.addHeader(JwtProvider.REFRESH_TOKEN_HEADER, raw_refreshTokenValue);
                     }
                 }
 
