@@ -1,7 +1,16 @@
 package com.sparta.newsfeedteamproject.controller;
 
+import com.sparta.newsfeedteamproject.dto.BaseResDto;
+import com.sparta.newsfeedteamproject.dto.LikeResDto;
+import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import com.sparta.newsfeedteamproject.service.LikeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,4 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class LikeController {
 
     private final LikeService likeService;
+
+    @PostMapping("/{feedId}/like")
+    public ResponseEntity<BaseResDto<LikeResDto>> likeFeed(@PathVariable("feedId") @Valid Long feedId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BaseResDto<LikeResDto> response = likeService.likeFeed(feedId,userDetails);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
 }
