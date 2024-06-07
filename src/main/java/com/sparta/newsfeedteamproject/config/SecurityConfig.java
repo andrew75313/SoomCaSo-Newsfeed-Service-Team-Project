@@ -6,6 +6,7 @@ import com.sparta.newsfeedteamproject.security.AuthorizationFilter;
 import com.sparta.newsfeedteamproject.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -62,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/signup", "/users/login").permitAll()
                         .requestMatchers("/users/profile/{user_id}").permitAll()
                         .requestMatchers("/feeds/{feed_id}", "/feeds/all").permitAll()
+                        .requestMatchers(HttpMethod.GET).permitAll()
                         .anyRequest().authenticated()
 
         );
