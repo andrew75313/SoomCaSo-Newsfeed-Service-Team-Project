@@ -6,6 +6,7 @@ import com.sparta.newsfeedteamproject.dto.user.UpdateReqDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
+import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
 import com.sparta.newsfeedteamproject.repository.UserRepository;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +34,12 @@ public class UserService {
 
         Optional<User> checkUsername = userRepository.findByUsername(username);
         if (checkUsername.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자 이름 입니다.");
+            throw new IllegalArgumentException(ExceptionMessage.DUPLICATE_USERNAME.getExceptionMessage());
         }
 
         Optional<User> checkEmail = userRepository.findByEmail(email);
         if (checkEmail.isPresent()) {
-            throw new IllegalArgumentException("중복된 이메일입니다.");
+            throw new IllegalArgumentException(ExceptionMessage.DUPLICATE_EMAIL.getExceptionMessage());
         }
 
         Status status = Status.ACTIVATE;
@@ -56,17 +57,17 @@ public class UserService {
         User checkUser = findById(userId);
 
         if (!loginUser.getUsername().equals(checkUser.getUsername())) {
-            throw new IllegalArgumentException("프로필 사용자가 일치하지 않아 회원탈퇴가 불가능합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INCORRECT_USER.getExceptionMessage());
         }
 
         String password = userDetails.getUser().getPassword();
 
         if (!passwordEncoder.matches(reqDto.getPassword(), password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않아 회원탈퇴가 불가능합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INCORRECT_PASSWORD.getExceptionMessage());
         }
 
         if (checkUser.getStatus() == Status.DEACTIVATE) {
-            throw new IllegalArgumentException("이미 탈퇴된 사용자는 재탈퇴가 불가능합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.DEATIVATE_USER.getExceptionMessage());
         }
 
         checkUser.setStatus(Status.DEACTIVATE);
@@ -78,17 +79,17 @@ public class UserService {
     @Transactional
     public void logout(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+                () -> new IllegalArgumentException(ExceptionMessage.NOT_FOUND_USER.getExceptionMessage())
         );
         user.deleteRefreshToken();
     }
 
     public ProfileResDto getProfile(Long userId) {
         User checkUser = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+                () -> new IllegalArgumentException(ExceptionMessage.NOT_FOUND_USER.getExceptionMessage())
         );
         if (checkUser.getStatus().equals(Status.DEACTIVATE)) {
-            throw new IllegalArgumentException("탈퇴한 사용자는 프로필 조회가 불가능합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.DEATIVATE_USER.getExceptionMessage());
         }
         return new ProfileResDto(checkUser);
     }
@@ -101,21 +102,21 @@ public class UserService {
         User checkUser = findById(userId);
 
         if (!loginUser.getUsername().equals(checkUser.getUsername())) {
-            throw new IllegalArgumentException("프로필 사용자가 일치하지 않아 수정이 불가능합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INCORRECT_USER.getExceptionMessage());
         }
 
         if (checkUser.getStatus().equals(Status.DEACTIVATE)) {
-            throw new IllegalArgumentException("탈퇴한 사용자는 프로필 수정이 불가능합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.DEATIVATE_USER.getExceptionMessage());
         }
 
         String password = userDetails.getUser().getPassword();
 
         if (!passwordEncoder.matches(reqDto.getPassword(), password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않아 프로필 수정이 불가능합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INCORRECT_PASSWORD.getExceptionMessage());
         }
 
         if (reqDto.getNewPassword().equals(reqDto.getPassword())) {
-            throw new IllegalArgumentException("기존 비밀번호와 일치하여 수정이 불가능합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.SAME_PASSWORD.getExceptionMessage());
         }
 
         String name = reqDto.getNewName();
@@ -131,13 +132,13 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
+                () -> new IllegalArgumentException(ExceptionMessage.NOT_FOUND_USER.getExceptionMessage())
         );
     }
 
     private User findById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
+                () -> new IllegalArgumentException(ExceptionMessage.NOT_FOUND_USER.getExceptionMessage())
         );
     }
 }
