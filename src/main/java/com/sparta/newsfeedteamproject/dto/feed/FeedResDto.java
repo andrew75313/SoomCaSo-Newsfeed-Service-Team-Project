@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class FeedResDto extends Timestamp {
+public class FeedResDto {
 
     private Long id;
     private String name;
