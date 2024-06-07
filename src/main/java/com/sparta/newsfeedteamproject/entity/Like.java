@@ -2,12 +2,14 @@ package com.sparta.newsfeedteamproject.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @Table(name="like")
+@NoArgsConstructor
 public class Like extends Timestamp{
 
     @Id
@@ -21,4 +23,10 @@ public class Like extends Timestamp{
     private Contents contents;
     @Column(nullable = false, name = "contents_id")
     private Long contentsId;
+
+    public Like(User user, Long contentsId, Contents contents) {
+        this.user = user;
+        this.contents = contents;
+        this.contentsId = contentsId;
+    }
 }
