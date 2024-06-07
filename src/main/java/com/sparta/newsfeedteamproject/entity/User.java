@@ -60,4 +60,8 @@ public class User extends Timestamp{
         this.password = newPassword;
         this.setModifiedAt(modifiedAt);
     }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
