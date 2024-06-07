@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/feeds")
 public class FeedController {
 
     private final FeedService feedService;
@@ -23,7 +23,7 @@ public class FeedController {
         this.feedService = feedService;
     }
 
-    @GetMapping("/feeds/all")
+    @GetMapping("/all")
     public ResponseEntity<BaseResDto<List<FeedResDto>>> getAllFeeds() {
 
         BaseResDto<List<FeedResDto>> response = feedService.getAllFeeds();
@@ -31,7 +31,7 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/feeds/{feed_id}")
+    @GetMapping("/{feed_id}")
     public ResponseEntity<BaseResDto<FeedResDto>> getFeed(@PathVariable(name = "feed_id") Long feed_id) {
 
         BaseResDto<FeedResDto> response = feedService.getFeed(feed_id);
@@ -39,7 +39,7 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/feeds")
+    @PostMapping
     public ResponseEntity<BaseResDto<FeedResDto>> createFeed(@Valid @RequestBody FeedReqDto reqDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
@@ -48,7 +48,7 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/feeds/{feed_id}")
+    @PutMapping("/{feed_id}")
     public ResponseEntity<BaseResDto<FeedResDto>> updateFeed(@PathVariable(name = "feed_id") Long feed_id,
                                                              @Valid @RequestBody FeedReqDto reqDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -58,7 +58,7 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/feeds/{feed_id}")
+    @DeleteMapping("/{feed_id}")
     public ResponseEntity<BaseResDto<FeedResDto>> deleteFeed(@PathVariable(name = "feed_id") Long feed_id,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
