@@ -4,45 +4,24 @@ import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.service.UserService;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
+
+import static com.sparta.newsfeedteamproject.config.JwtConfig.*;
 
 @Slf4j(topic = "JwtProvider")
 @Component
 public class JwtProvider {
 
-    public static final String ACCESS_TOKEN_HEADER = "accessToken";
-    public static final String REFRESH_TOKEN_HEADER = "refreshToken";
-    public static final String AUTHORIZATION_KEY = "status";
-    public static final String BEARER_PREFIX = "Bearer ";
-    private final long ACCESS_TOKEN_TIME = 30 * 60 * 1000L;
-    private final long REFRESH_TOKEN_TIME = 14 * 24 * 60 * 60 * 1000L;
-
     private final UserService userService;
 
     public JwtProvider(UserService userService) {
         this.userService = userService;
-    }
-
-    @Value("${jwt.secret.key}")
-    private String secretKey;
-    private Key key;
-    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
-    @PostConstruct
-    public void init() {
-        byte[] bytes = Base64.getDecoder().decode(secretKey);
-        key = Keys.hmacShaKeyFor(bytes);
     }
 
     public String createAccessToken(String username, Status status) {
@@ -51,7 +30,7 @@ public class JwtProvider {
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username)
-                        .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_TIME))
+                        .setExpiration(new Date(date.getTime() + accessTokenTime))
                         .claim(AUTHORIZATION_KEY, status)
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
@@ -65,7 +44,7 @@ public class JwtProvider {
         String refreshToken = BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username)
-                        .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
+                        .setExpiration(new Date(date.getTime() + refreshTokenTime))
                         .claim(AUTHORIZATION_KEY, status)
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
