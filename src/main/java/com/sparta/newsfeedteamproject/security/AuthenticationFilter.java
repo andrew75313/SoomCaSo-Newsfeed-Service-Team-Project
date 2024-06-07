@@ -1,6 +1,7 @@
 package com.sparta.newsfeedteamproject.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
@@ -10,6 +11,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -77,6 +80,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         response.addHeader(JwtProvider.ACCESS_TOKEN_HEADER, accesstoken);
         response.addHeader(JwtProvider.REFRESH_TOKEN_HEADER, refreshtoken);
+
+        BaseResDto baseResDto = new BaseResDto(HttpStatus.NO_CONTENT.value(), "로그인 성공", null);
+        ResponseEntity<BaseResDto> responseDto = new ResponseEntity<>(baseResDto, HttpStatus.OK);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto.getBody()));
     }
 
     @Override

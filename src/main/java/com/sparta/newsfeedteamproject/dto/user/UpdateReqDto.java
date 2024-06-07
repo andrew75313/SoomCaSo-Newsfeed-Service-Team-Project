@@ -16,6 +16,6 @@ public class UpdateReqDto {
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{10,}$")
     private String newPassword;
     @NotBlank
-    private String name;
-    private String userInfo;
+    private String newName;
+    private String newUserInfo;
 }
