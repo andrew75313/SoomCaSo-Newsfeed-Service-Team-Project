@@ -28,9 +28,11 @@ public class FeedService {
                 .map(feed -> new FeedResDto(feed))
                 .collect(Collectors.toList());
 
-        String message = !feedList.isEmpty() ? "게시물 조회가 완료되었습니다!" : "먼저 작성하여 소식을 알려보세요!";
+        if(feedList.isEmpty()) {
+            return new BaseResDto<>(HttpStatus.OK.value(), "먼저 작성하여 소식을 알려보세요!", null);
+        }
 
-        return new BaseResDto<>(HttpStatus.OK.value(), message, feedList);
+        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", feedList);
     }
 
     public BaseResDto<FeedResDto> getFeed(Long feed_id) {
