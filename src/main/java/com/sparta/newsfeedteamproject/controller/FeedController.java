@@ -24,8 +24,8 @@ public class FeedController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<BaseResDto<List<FeedResDto>>> getAllFeeds(@RequestParam("page") int page,
-                                                                    @RequestParam("sortBy") String sortBy) {
+    public ResponseEntity<BaseResDto<List<FeedResDto>>> getAllFeeds(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                    @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
 
         BaseResDto<List<FeedResDto>> response = feedService.getAllFeeds(page - 1, sortBy);
 
