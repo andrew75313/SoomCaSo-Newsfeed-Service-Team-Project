@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
+import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
 import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
 import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import jakarta.servlet.FilterChain;
@@ -43,7 +44,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             //유저 상태 확인
             if (!Status.ACTIVATE.equals((((UserDetailsImpl) userDetailsService.loadUserByUsername(requestDto.getUsername())).getUser()).getStatus())) {
                 log.error("탈퇴한 회원");
-                throw new AccountStatusException("탈퇴한 회원입니다.") {
+                throw new AccountStatusException(ExceptionMessage.DEATIVATE_USER.getExceptionMessage()) {
                     @Override
                     public String getMessage() {
                         return super.getMessage();
