@@ -5,8 +5,10 @@ import com.sparta.newsfeedteamproject.dto.user.ProfileResDto;
 import com.sparta.newsfeedteamproject.dto.user.SignupReqDto;
 import com.sparta.newsfeedteamproject.dto.user.UpdateReqDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
+import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import com.sparta.newsfeedteamproject.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JwtProvider jwtProvider;
 
 
     @PostMapping("/signup")
@@ -37,15 +40,11 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<BaseResDto> login() {
-        BaseResDto resDto = new BaseResDto(HttpStatus.OK.value(), "로그인이 완료되었습니다",null);
-        return new ResponseEntity<>(resDto, HttpStatus.NO_CONTENT);
-    }
-
     @PostMapping("/logout")
-    public ResponseEntity<BaseResDto> logout(UserDetailsImpl userDetails) {
-        userService.logout(userDetails);
+    public ResponseEntity<BaseResDto> logout(HttpServletRequest request) {
+        String token = jwtProvider.substringToken(jwtProvider.getJwtFromHeader(request, JwtProvider.ACCESS_TOKEN_HEADER));
+        String username = jwtProvider.getUserInfoFromToken(token).getSubject();
+        userService.logout(username);
         BaseResDto resDto = new BaseResDto(HttpStatus.NO_CONTENT.value(), "로그아웃이 완료되었습니다",null);
         return new ResponseEntity<>(resDto, HttpStatus.NO_CONTENT);
     }

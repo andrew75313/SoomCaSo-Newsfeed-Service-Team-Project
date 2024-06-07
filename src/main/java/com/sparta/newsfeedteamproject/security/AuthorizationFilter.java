@@ -7,18 +7,17 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 public class AuthorizationFilter extends OncePerRequestFilter {
@@ -33,12 +32,12 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.ACCESS_TOKEN_HEADER);
-            String refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.REFRESH_TOKEN_HEADER);
 
-            if (StringUtils.hasText(accessTokenValue)) {
+        String accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.ACCESS_TOKEN_HEADER);
+        String refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.REFRESH_TOKEN_HEADER);
 
+        if (StringUtils.hasText(accessTokenValue) && StringUtils.hasText(refreshTokenValue)) {
+            try {
                 // JWT 토큰 substring
                 accessTokenValue = jwtProvider.substringToken(accessTokenValue);
                 refreshTokenValue = jwtProvider.substringToken(refreshTokenValue);
@@ -46,32 +45,40 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                 log.info(accessTokenValue);
                 log.info(refreshTokenValue);
 
-                if (!jwtProvider.isTokenValidate(accessTokenValue) && !jwtProvider.isTokenValidate(refreshTokenValue)) {
-                    throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.");
-                }
-
                 Claims info = jwtProvider.getUserInfoFromToken(accessTokenValue);
 
                 UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetailsService.loadUserByUsername(info.getSubject());
 
-                if (!(refreshTokenValue == userDetailsImpl.getUser().getRefreshToken())) {
-                    throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.");
+                //DB의 refreshtoken과 같은지 비교 (조작된 토큰인지 확인)
+                if (!(Objects.equals(refreshTokenValue, jwtProvider.substringToken((userDetailsImpl.getUser().getRefreshToken()))))) {
+                    throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.1");
                 }
 
-                //토큰 재생성
-                jwtProvider.reCreateTokens(info.getSubject(), res);
+                //둘 다 유효하지 않을 때
+                if (!jwtProvider.isTokenValidate(accessTokenValue) && !jwtProvider.isTokenValidate(refreshTokenValue)) {
+                    throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.2");
+                }
 
-                log.info("토큰 재생성 완료");
+                //로그아웃 요청일 땐 Header에 토큰 추가 X
+                if (!"users/logout".equals(req.getRequestURI())) {
+                    if ((!jwtProvider.isTokenValidate(accessTokenValue) && jwtProvider.isTokenValidate(refreshTokenValue))) //refresh만 정상일 때
+                    {
+                        //토큰 재생성
+                        jwtProvider.reCreateTokens(info.getSubject(), res);
+                        log.info("토큰 재생성 완료");
+                    } else { //두 토큰 다 정상일 때
+                        res.addHeader(JwtProvider.ACCESS_TOKEN_HEADER, accessTokenValue);
+                        res.addHeader(JwtProvider.REFRESH_TOKEN_HEADER, refreshTokenValue);
+                    }
+                }
 
                 setAuthentication(info.getSubject());
 
-            } else {
-                throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.");
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                FilterExceptionHandler.handleExceptionInFilter(res, e);
+                return;
             }
-        }catch(Exception e){
-            log.error(e.getMessage());
-            FilterExceptionHandler.handleExceptionInFilter(res, e);
-            return;
         }
 
         filterChain.doFilter(req, res);
