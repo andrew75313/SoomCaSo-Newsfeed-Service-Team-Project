@@ -10,9 +10,9 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class BaseResDto<T> {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private int statusCode;
     private String message;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public BaseResDto(int statusCode, String message, T data) {
