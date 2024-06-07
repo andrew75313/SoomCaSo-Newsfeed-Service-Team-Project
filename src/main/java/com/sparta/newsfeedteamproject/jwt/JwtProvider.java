@@ -2,7 +2,7 @@ package com.sparta.newsfeedteamproject.jwt;
 
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
-import com.sparta.newsfeedteamproject.repository.UserRepository;
+import com.sparta.newsfeedteamproject.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -28,10 +28,10 @@ public class JwtProvider {
     private final long ACCESS_TOKEN_TIME = 30 * 60 * 1000L;
     private final long REFRESH_TOKEN_TIME = 14 * 24 * 60 * 60 * 1000L;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public JwtProvider(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public JwtProvider(UserService userService) {
+        this.userService = userService;
     }
 
     @Value("${jwt.secret.key}")
@@ -70,9 +70,7 @@ public class JwtProvider {
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("해당 이름을 가진 사용자가 없습니다.")
-        );
+        User user = userService.findByUsername(username);
         user.updateRefreshToken(refreshToken);
         return refreshToken;
     }
@@ -112,9 +110,7 @@ public class JwtProvider {
     @Transactional
     public void reCreateTokens(String username, HttpServletResponse response) {
 
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("해당 이름을 가진 사용자가 없습니다.")
-        );
+        User user = userService.findByUsername(username);
         String accessToken = createAccessToken(user.getUsername(), user.getStatus());
         String refreshToken = createRefreshToken(user.getUsername(), user.getStatus());
 
