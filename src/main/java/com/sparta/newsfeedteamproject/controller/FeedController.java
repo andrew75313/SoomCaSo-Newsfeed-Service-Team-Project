@@ -24,12 +24,13 @@ public class FeedController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<BaseResDto<List<FeedResDto>>> getAllFeeds() {
+    public ResponseEntity<BaseResDto<List<FeedResDto>>> getAllFeeds(@RequestParam("page") int page) {
 
-        BaseResDto<List<FeedResDto>> response = feedService.getAllFeeds();
+        BaseResDto<List<FeedResDto>> response = feedService.getAllFeeds(page - 1);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 
     @GetMapping("/{feed_id}")
     public ResponseEntity<BaseResDto<FeedResDto>> getFeed(@PathVariable(name = "feed_id") Long feed_id) {

@@ -6,12 +6,15 @@ import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
 import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.repository.FeedRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FeedService {
@@ -22,13 +25,14 @@ public class FeedService {
         this.feedRepository = feedRepository;
     }
 
-    public BaseResDto<List<FeedResDto>> getAllFeeds() {
+    public BaseResDto<List<FeedResDto>> getAllFeeds(int page) {
 
-        List<FeedResDto> feedList = feedRepository.findAllByOrderByCreatedAtDesc().stream()
-                .map(feed -> new FeedResDto(feed))
-                .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page, 10);
 
-        if(feedList.isEmpty()) {
+        Page<FeedResDto> feedPage = feedRepository.findAll(pageable).map(FeedResDto::new);
+        List<FeedResDto> feedList = feedPage.getContent();
+
+        if (feedList.isEmpty()) {
             return new BaseResDto<>(HttpStatus.OK.value(), "먼저 작성하여 소식을 알려보세요!", null);
         }
 
