@@ -10,6 +10,7 @@ import com.sparta.newsfeedteamproject.repository.UserRepository;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +22,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public void signup(SignupReqDto reqDto) {
 
         String username = reqDto.getUsername();
-        String password = bCryptPasswordEncoder.encode(reqDto.getPassword());
+        String password = passwordEncoder.encode(reqDto.getPassword());
         String name = reqDto.getName();
         String email = reqDto.getEmail();
         String userInfo = reqDto.getUserInfo();
@@ -52,7 +53,7 @@ public class UserService {
 
         String password = userDetails.getUser().getPassword();
 
-        if(!bCryptPasswordEncoder.matches(reqDto.getPassword(),password)){
+        if(!passwordEncoder.matches(reqDto.getPassword(),password)){
             throw new IllegalArgumentException("비밀번호가 일치하지 않아 회원탈퇴가 불가능합니다.");
         }
 
@@ -95,7 +96,7 @@ public class UserService {
 
         String password = userDetails.getUser().getPassword();
 
-        if(!bCryptPasswordEncoder.matches(reqDto.getPassword(),password)){
+        if(!passwordEncoder.matches(reqDto.getPassword(),password)){
             throw new IllegalArgumentException("비밀번호가 일치하지 않아 프로필 수정이 불가능합니다.");
         }
 
@@ -105,7 +106,7 @@ public class UserService {
 
         String name = reqDto.getNewName();
         String userInfo = reqDto.getNewUserInfo();
-        String newPassword = bCryptPasswordEncoder.encode(reqDto.getNewPassword());
+        String newPassword = passwordEncoder.encode(reqDto.getNewPassword());
         LocalDateTime modifiedAt = LocalDateTime.now();
 
         checkUser.update(name,userInfo,newPassword,modifiedAt);
