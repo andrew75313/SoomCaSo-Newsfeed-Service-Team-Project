@@ -25,9 +25,10 @@ public class FeedService {
         this.feedRepository = feedRepository;
     }
 
-    public BaseResDto<List<FeedResDto>> getAllFeeds(int page) {
+    public BaseResDto<List<FeedResDto>> getAllFeeds(int page, String sortBy) {
 
-        Pageable pageable = PageRequest.of(page, 10);
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
+        Pageable pageable = PageRequest.of(page, 10, sort);
 
         Page<FeedResDto> feedPage = feedRepository.findAll(pageable).map(FeedResDto::new);
         List<FeedResDto> feedList = feedPage.getContent();
