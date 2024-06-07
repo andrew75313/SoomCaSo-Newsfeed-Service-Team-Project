@@ -1,5 +1,6 @@
 package com.sparta.newsfeedteamproject.security;
 
+import com.sparta.newsfeedteamproject.config.JwtConfig;
 import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
 import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
@@ -33,8 +34,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
-        String raw_accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.ACCESS_TOKEN_HEADER);
-        String raw_refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.REFRESH_TOKEN_HEADER);
+        String raw_accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtConfig.ACCESS_TOKEN_HEADER);
+        String raw_refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtConfig.REFRESH_TOKEN_HEADER);
 
         if (StringUtils.hasText(raw_accessTokenValue) && StringUtils.hasText(raw_refreshTokenValue)) {
             try {
@@ -67,8 +68,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                         jwtProvider.reCreateTokens(info.getSubject(), res);
                         log.info("토큰 재생성 완료");
                     } else { //두 토큰 다 정상일 때
-                        res.addHeader(JwtProvider.ACCESS_TOKEN_HEADER, raw_accessTokenValue);
-                        res.addHeader(JwtProvider.REFRESH_TOKEN_HEADER, raw_refreshTokenValue);
+                        res.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, raw_accessTokenValue);
+                        res.addHeader(JwtConfig.REFRESH_TOKEN_HEADER, raw_refreshTokenValue);
                     }
                 }
 

@@ -1,6 +1,7 @@
 package com.sparta.newsfeedteamproject.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.newsfeedteamproject.config.JwtConfig;
 import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
@@ -79,8 +80,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         log.info("JWT 생성");
 
-        response.addHeader(JwtProvider.ACCESS_TOKEN_HEADER, accesstoken);
-        response.addHeader(JwtProvider.REFRESH_TOKEN_HEADER, refreshtoken);
+        response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, accesstoken);
+        response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER, refreshtoken);
 
         BaseResDto baseResDto = new BaseResDto(HttpStatus.NO_CONTENT.value(), "로그인 성공", null);
         ResponseEntity<BaseResDto> responseDto = new ResponseEntity<>(baseResDto, HttpStatus.OK);
