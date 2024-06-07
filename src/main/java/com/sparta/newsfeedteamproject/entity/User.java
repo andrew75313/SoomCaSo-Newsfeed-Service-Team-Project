@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,12 +12,12 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "users")
 @RequiredArgsConstructor
-public class User extends Timestamp{
+public class User extends Timestamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false,name = "username")
+    @Column(unique = true, nullable = false, name = "username")
     private String username;
     @Column(nullable = false)
     private String password;
@@ -31,7 +32,7 @@ public class User extends Timestamp{
     private Status status;
     @Column(name = "refresh_token")
     private String refreshToken;
-    @Column(nullable = false,name = "status_mod_time")
+    @Column(nullable = false, name = "status_mod_time")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime statusModTime;
 
@@ -45,13 +46,8 @@ public class User extends Timestamp{
         this.statusModTime = statusModTime;
     }
 
-    public User(Status status, LocalDateTime statusModTime) {
-        this.status = status;
-        this.statusModTime = statusModTime;
-    }
-
     public void deleteRefreshToken() {
-         this.refreshToken = "";
+        this.refreshToken = "";
     }
 
     public void update(String name, String userInfo, String newPassword, LocalDateTime modifiedAt) {
