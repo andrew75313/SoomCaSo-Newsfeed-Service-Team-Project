@@ -36,7 +36,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         String accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.ACCESS_TOKEN_HEADER);
         String refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtProvider.REFRESH_TOKEN_HEADER);
 
-        if (StringUtils.hasText(accessTokenValue)) {
+        if (StringUtils.hasText(accessTokenValue) && StringUtils.hasText(refreshTokenValue)) {
             try {
                 // JWT 토큰 substring
                 accessTokenValue = jwtProvider.substringToken(accessTokenValue);
