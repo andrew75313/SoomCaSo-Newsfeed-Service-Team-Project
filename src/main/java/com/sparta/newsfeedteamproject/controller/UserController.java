@@ -55,9 +55,9 @@ public class UserController {
         return new ResponseEntity<>(responseDto,HttpStatus.OK);
     }
 
-    @PutMapping("/profile")
-    public ResponseEntity<BaseResDto<ProfileResDto>> editProfile(@RequestBody @Valid UpdateReqDto reqDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        BaseResDto<ProfileResDto> responseDto = new BaseResDto<>(HttpStatus.OK.value(), "프로필 수정이 완료되었습니다!",userService.editProfile(reqDto,userDetails));
+    @PutMapping("/profile/{userId}")
+    public ResponseEntity<BaseResDto<ProfileResDto>> editProfile(@PathVariable Long userId,@RequestBody @Valid UpdateReqDto reqDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BaseResDto<ProfileResDto> responseDto = new BaseResDto<>(HttpStatus.OK.value(), "프로필 수정이 완료되었습니다!",userService.editProfile(userId,reqDto,userDetails));
         return new ResponseEntity<>(responseDto,HttpStatus.OK);
     }
 

@@ -6,11 +6,9 @@ import com.sparta.newsfeedteamproject.dto.user.UpdateReqDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
-import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import com.sparta.newsfeedteamproject.repository.UserRepository;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,10 +60,10 @@ public class UserService {
             throw new IllegalArgumentException("이미 탈퇴된 사용자는 재탈퇴가 불가능합니다.");
         }
 
-        Status status = Status.DEACTIVATE;
-        LocalDateTime statusModTime = LocalDateTime.now();
+        User user = userDetails.getUser();
+        user.setStatus(Status.DEACTIVATE);
+        user.setStatusModTime(LocalDateTime.now());
 
-        User user = new User(status,statusModTime);
         userRepository.save(user);
     }
 
@@ -87,11 +85,16 @@ public class UserService {
         return new ProfileResDto(checkUser);
     }
 
-    public ProfileResDto editProfile(UpdateReqDto reqDto, UserDetailsImpl userDetails) {
+    public ProfileResDto editProfile(Long userId, UpdateReqDto reqDto, UserDetailsImpl userDetails) {
 
         String username = userDetails.getUser().getUsername();
 
-        User checkUser = findByUsername(username);
+        User loginUser = findByUsername(username);
+        User checkUser = findById(userId);
+
+        if(!loginUser.getUsername().equals(checkUser.getUsername())){
+            throw new IllegalArgumentException("프로필 사용자가 일치하지 않아 수정이 불가능합니다.");
+        }
 
         if(checkUser.getStatus().equals(Status.DEACTIVATE)){
             throw new IllegalArgumentException("탈퇴한 사용자는 프로필 수정이 불가능합니다.");
@@ -103,7 +106,7 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않아 프로필 수정이 불가능합니다.");
         }
 
-        if(reqDto.getNewPassword().equals(password)){
+        if(reqDto.getNewPassword().equals(reqDto.getPassword())){
             throw new IllegalArgumentException("기존 비밀번호와 일치하여 수정이 불가능합니다.");
         }
 
@@ -119,6 +122,11 @@ public class UserService {
     }
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(
+                ()-> new IllegalArgumentException("존재하지 않는 사용자입니다.")
+        );
+    }
+    public User findById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
                 ()-> new IllegalArgumentException("존재하지 않는 사용자입니다.")
         );
     }
