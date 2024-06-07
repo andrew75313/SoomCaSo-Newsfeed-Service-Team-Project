@@ -6,10 +6,12 @@ import com.sparta.newsfeedteamproject.dto.user.UpdateReqDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
+import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import com.sparta.newsfeedteamproject.repository.UserRepository;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +23,13 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     public void signup(SignupReqDto reqDto) {
 
         String username = reqDto.getUsername();
-        String password = bCryptPasswordEncoder.encode(reqDto.getPassword());
+        String password = passwordEncoder.encode(reqDto.getPassword());
         String name = reqDto.getName();
         String email = reqDto.getEmail();
         String userInfo = reqDto.getUserInfo();
@@ -68,8 +71,10 @@ public class UserService {
     }
 
     @Transactional
-    public void logout(UserDetailsImpl userDetails) {
-        User user = userDetails.getUser();
+    public void logout(String token) {
+        User user = userRepository.findByUsername(jwtProvider.getUserInfoFromToken(token).getSubject()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+        );
         user.deleteRefreshToken();
     }
 
