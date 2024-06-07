@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -25,12 +26,19 @@ public class FeedService {
         this.feedRepository = feedRepository;
     }
 
-    public BaseResDto<List<FeedResDto>> getAllFeeds(int page, String sortBy) {
+    public BaseResDto<List<FeedResDto>> getAllFeeds(int page, String sortBy, LocalDate startDate, LocalDate endDate) {
 
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, 10, sort);
+        Page<FeedResDto> feedPage;
 
-        Page<FeedResDto> feedPage = feedRepository.findAll(pageable).map(FeedResDto::new);
+        if (startDate != null && endDate != null) {
+            feedPage = feedRepository.findAllByCreatedAtBetween(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay(), pageable)
+                    .map(FeedResDto::new);
+        } else {
+            feedPage = feedRepository.findAll(pageable).map(FeedResDto::new);
+        }
+
         List<FeedResDto> feedList = feedPage.getContent();
 
         if (feedList.isEmpty()) {
