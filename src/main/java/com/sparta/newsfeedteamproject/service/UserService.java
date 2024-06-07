@@ -52,7 +52,7 @@ public class UserService {
 
         String password = userDetails.getUser().getPassword();
 
-        if(!reqDto.getPassword().equals(password)){
+        if(!bCryptPasswordEncoder.matches(reqDto.getPassword(),password)){
             throw new IllegalArgumentException("비밀번호가 일치하지 않아 회원탈퇴가 불가능합니다.");
         }
 
@@ -87,9 +87,7 @@ public class UserService {
 
         String username = userDetails.getUser().getUsername();
 
-        User checkUser = userRepository.findByUsername(username).orElseThrow(
-                ()-> new IllegalArgumentException("존재하지 않는 사용자입니다.")
-        );
+        User checkUser = findByUsername(username);
 
         if(checkUser.getStatus().equals(Status.DEACTIVATE)){
             throw new IllegalArgumentException("탈퇴한 사용자는 프로필 수정이 불가능합니다.");
@@ -105,8 +103,8 @@ public class UserService {
             throw new IllegalArgumentException("기존 비밀번호와 일치하여 수정이 불가능합니다.");
         }
 
-        String name = reqDto.getName();
-        String userInfo = reqDto.getUserInfo();
+        String name = reqDto.getNewName();
+        String userInfo = reqDto.getNewUserInfo();
         String newPassword = bCryptPasswordEncoder.encode(reqDto.getNewPassword());
         LocalDateTime modifiedAt = LocalDateTime.now();
 
@@ -114,5 +112,10 @@ public class UserService {
         userRepository.save(checkUser);
 
         return new ProfileResDto(checkUser);
+    }
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                ()-> new IllegalArgumentException("존재하지 않는 사용자입니다.")
+        );
     }
 }
