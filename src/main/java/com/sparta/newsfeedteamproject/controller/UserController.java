@@ -43,7 +43,8 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseEntity<BaseResDto> logout(HttpServletRequest request) {
         String token = jwtProvider.substringToken(jwtProvider.getJwtFromHeader(request, JwtProvider.ACCESS_TOKEN_HEADER));
-        userService.logout(token);
+        String username = jwtProvider.getUserInfoFromToken(token).getSubject();
+        userService.logout(username);
         BaseResDto resDto = new BaseResDto(HttpStatus.NO_CONTENT.value(), "로그아웃이 완료되었습니다",null);
         return new ResponseEntity<>(resDto, HttpStatus.NO_CONTENT);
     }

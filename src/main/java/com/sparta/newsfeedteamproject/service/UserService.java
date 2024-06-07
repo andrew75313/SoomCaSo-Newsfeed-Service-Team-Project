@@ -24,7 +24,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
 
     public void signup(SignupReqDto reqDto) {
 
@@ -55,7 +54,7 @@ public class UserService {
 
         String password = userDetails.getUser().getPassword();
 
-        if(!bCryptPasswordEncoder.matches(reqDto.getPassword(),password)){
+        if(!passwordEncoder.matches(reqDto.getPassword(),password)){
             throw new IllegalArgumentException("비밀번호가 일치하지 않아 회원탈퇴가 불가능합니다.");
         }
 
@@ -71,8 +70,8 @@ public class UserService {
     }
 
     @Transactional
-    public void logout(String token) {
-        User user = userRepository.findByUsername(jwtProvider.getUserInfoFromToken(token).getSubject()).orElseThrow(
+    public void logout(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
         );
         user.deleteRefreshToken();
@@ -100,7 +99,7 @@ public class UserService {
 
         String password = userDetails.getUser().getPassword();
 
-        if(!bCryptPasswordEncoder.matches(reqDto.getPassword(),password)){
+        if(!passwordEncoder.matches(reqDto.getPassword(),password)){
             throw new IllegalArgumentException("비밀번호가 일치하지 않아 프로필 수정이 불가능합니다.");
         }
 
@@ -110,7 +109,7 @@ public class UserService {
 
         String name = reqDto.getNewName();
         String userInfo = reqDto.getNewUserInfo();
-        String newPassword = bCryptPasswordEncoder.encode(reqDto.getNewPassword());
+        String newPassword = passwordEncoder.encode(reqDto.getNewPassword());
         LocalDateTime modifiedAt = LocalDateTime.now();
 
         checkUser.update(name,userInfo,newPassword,modifiedAt);
