@@ -28,15 +28,15 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<BaseResDto> signup(@RequestBody @Valid SignupReqDto reqDto) {
         userService.signup(reqDto);
-        BaseResDto responseDto = new BaseResDto(HttpStatus.OK.value(), "회원가입이 완료되었습니다!",null);
+        BaseResDto responseDto = new BaseResDto(HttpStatus.OK.value(), "회원가입이 완료되었습니다!", null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
 
     }
 
-    @PutMapping("/status")
-    public ResponseEntity<BaseResDto> withdraw(@RequestBody @Valid UserAuthReqDto reqDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.withdraw(reqDto,userDetails);
-        BaseResDto responseDto = new BaseResDto(HttpStatus.OK.value(), "회원 탈퇴가 완료되었습니다!",null);
+    @PutMapping("/status/{userId}")
+    public ResponseEntity<BaseResDto> withdraw(@PathVariable Long userId, @RequestBody @Valid UserAuthReqDto reqDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.withdraw(userId, reqDto, userDetails);
+        BaseResDto responseDto = new BaseResDto(HttpStatus.OK.value(), "회원 탈퇴가 완료되었습니다!", null);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
@@ -45,20 +45,20 @@ public class UserController {
         String token = jwtProvider.substringToken(jwtProvider.getJwtFromHeader(request, JwtProvider.ACCESS_TOKEN_HEADER));
         String username = jwtProvider.getUserInfoFromToken(token).getSubject();
         userService.logout(username);
-        BaseResDto resDto = new BaseResDto(HttpStatus.NO_CONTENT.value(), "로그아웃이 완료되었습니다",null);
+        BaseResDto resDto = new BaseResDto(HttpStatus.NO_CONTENT.value(), "로그아웃이 완료되었습니다", null);
         return new ResponseEntity<>(resDto, HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/profile/{userId}")
     public ResponseEntity<BaseResDto<ProfileResDto>> getProfile(@PathVariable Long userId) {
-        BaseResDto<ProfileResDto> responseDto = new BaseResDto<>(HttpStatus.OK.value(), "프로필 조회가 완료되었습니다!",userService.getProfile(userId));
-        return new ResponseEntity<>(responseDto,HttpStatus.OK);
+        BaseResDto<ProfileResDto> responseDto = new BaseResDto<>(HttpStatus.OK.value(), "프로필 조회가 완료되었습니다!", userService.getProfile(userId));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PutMapping("/profile/{userId}")
-    public ResponseEntity<BaseResDto<ProfileResDto>> editProfile(@PathVariable Long userId,@RequestBody @Valid UpdateReqDto reqDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        BaseResDto<ProfileResDto> responseDto = new BaseResDto<>(HttpStatus.OK.value(), "프로필 수정이 완료되었습니다!",userService.editProfile(userId,reqDto,userDetails));
-        return new ResponseEntity<>(responseDto,HttpStatus.OK);
+    public ResponseEntity<BaseResDto<ProfileResDto>> editProfile(@PathVariable Long userId, @RequestBody @Valid UpdateReqDto reqDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BaseResDto<ProfileResDto> responseDto = new BaseResDto<>(HttpStatus.OK.value(), "프로필 수정이 완료되었습니다!", userService.editProfile(userId, reqDto, userDetails));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
 }
