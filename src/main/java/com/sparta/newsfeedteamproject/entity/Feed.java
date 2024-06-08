@@ -26,6 +26,7 @@ public class Feed extends Timestamp {
     public Feed(FeedReqDto reqDto, User user) {
         this.contents = reqDto.getContents();
         this.user = user;
+        this.likes = 0L;
     }
 
     public void update(FeedReqDto reqDto) {
