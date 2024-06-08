@@ -89,6 +89,18 @@ public class FeedService {
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 삭제가 완료되었습니다!", null);
     }
 
+    @Transactional
+    public void increaseFeedLikes(Long feed_id) {
+        Feed feed = findFeed(feed_id);
+        feed.increaseLikes();
+    }
+
+    @Transactional
+    public void decreaseFeedLikes(Long feed_id) {
+        Feed feed = findFeed(feed_id);
+        feed.decreaseLikes();
+    }
+
     private Feed findFeed(Long feed_id) {
 
         Feed feed = feedRepository.findById(feed_id).orElseThrow(

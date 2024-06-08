@@ -32,4 +32,12 @@ public class Feed extends Timestamp {
     public void update(FeedReqDto reqDto) {
         this.contents = reqDto.getContents();
     }
+
+    public void increaseLikes() {
+        this.likes++;
+    }
+
+    public void decreaseLikes() {
+        this.likes--;
+    }
 }
