@@ -1,6 +1,7 @@
 package com.sparta.newsfeedteamproject.service;
 
 import com.sparta.newsfeedteamproject.dto.BaseResDto;
+import com.sparta.newsfeedteamproject.dto.comment.CommentDelResDto;
 import com.sparta.newsfeedteamproject.dto.comment.CommentReqDto;
 import com.sparta.newsfeedteamproject.dto.comment.CommentResDto;
 import com.sparta.newsfeedteamproject.entity.Comment;
@@ -57,6 +58,24 @@ public class CommentService {
         CommentResDto resDto = new CommentResDto(comment);
 
         return new BaseResDto<>(HttpStatus.OK.value(), "댓글 수정이 완료되었습니다!", resDto);
+    }
+
+    public BaseResDto<CommentDelResDto> deleteComment(Long feedId, Long commentId, User user) {
+
+        feedService.findFeed(feedId);
+        Comment comment = findComment(commentId);
+        String loginUsername = user.getUsername();
+        String commentUsername = comment.getUser().getUsername();
+
+        if (!loginUsername.equals(commentUsername)) {
+            throw new IllegalArgumentException("해당 댓글은 작성자만 삭제 할 수 있습니다!");
+        }
+
+        commentRepository.delete(comment);
+
+        CommentDelResDto resDto = new CommentDelResDto(feedId);
+
+        return new BaseResDto<>(HttpStatus.OK.value(), "댓글 삭제가 완료되었습니다!", resDto);
     }
 
     private Comment findComment(Long id) {
