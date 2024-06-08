@@ -5,6 +5,7 @@ import com.sparta.newsfeedteamproject.dto.LikeResDto;
 import com.sparta.newsfeedteamproject.entity.Contents;
 import com.sparta.newsfeedteamproject.entity.Like;
 import com.sparta.newsfeedteamproject.entity.User;
+import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
 import com.sparta.newsfeedteamproject.repository.LikeRepository;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class LikeService {
     private final LikeRepository likeRepository;
     private final FeedService feedService;
+    private final CommentService commentService;
 
     public BaseResDto<LikeResDto> likeFeed(Long feedId, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
@@ -36,13 +38,37 @@ public class LikeService {
 
         } else {//좋아요 취소
             Like oldLike = like.orElseThrow(
-                    () -> new IllegalArgumentException("해당 요소가 없습니다.")
+                    () -> new IllegalArgumentException(ExceptionMessage.NON_EXISTENT_ELEMENT.getExceptionMessage())
             );
             likeRepository.delete(oldLike);
 
             //게시물 DB에 저장된 좋아요 수 -1
             feedService.decreaseFeedLikes(feedId); //FeedSerivce에 구현되어야함
             return new BaseResDto(HttpStatus.OK.value(), "게시글 좋아요를 취소하였습니다!", likeResDto);
+        }
+    }
+
+    public BaseResDto<LikeResDto> likeComment(Long feedId, Long commentId, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        Optional<Like> like = likeRepository.findByContentsIdAndContentsAndUser(commentId, Contents.COMMENT, user);
+        LikeResDto likeResDto = new LikeResDto(commentId, Contents.COMMENT);
+
+        if (like.isEmpty()) {
+            Like newlike = new Like(user, commentId, Contents.COMMENT);
+            likeRepository.save(newlike);
+
+            commentService.increaseCommentLikes(commentId);
+
+            return new BaseResDto<>(HttpStatus.OK.value(),"댓글을 좋아요하였습니다!", likeResDto);
+
+        } else{
+            Like oldLike = like.orElseThrow(
+                    () -> new IllegalArgumentException(ExceptionMessage.NON_EXISTENT_ELEMENT.getExceptionMessage())
+            );
+            likeRepository.delete(oldLike);
+
+            commentService.decreaseCommentLikes(commentId);
+            return new BaseResDto<>(HttpStatus.OK.value(),"댓글 좋아요를 취소하였습니다.",likeResDto);
         }
     }
 
@@ -58,5 +84,4 @@ public class LikeService {
         contentsIds.stream()
                 .forEach(id -> deleteAllLikes(id, contentType));
     }
-
 }
