@@ -33,4 +33,8 @@ public class Comment extends Timestamp {
         this.user = user;
         this.likes = likes;
     }
+
+    public void update(String contents) {
+        this.contents = contents;
+    }
 }

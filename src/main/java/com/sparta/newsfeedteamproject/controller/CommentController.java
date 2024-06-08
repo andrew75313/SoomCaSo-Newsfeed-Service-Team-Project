@@ -39,4 +39,15 @@ public class CommentController {
 
         return ResponseEntity.status(HttpStatus.OK).body(resDto);
     }
+
+    @PutMapping("/{feedId}/comments/{commentId}")
+    public ResponseEntity<BaseResDto<CommentResDto>> updateComment(@PathVariable Long feedId,
+                                                                   @PathVariable Long commentId,
+                                                                   @Valid @RequestBody CommentReqDto reqDto,
+                                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        BaseResDto<CommentResDto> resDto = commentService.updateComment(feedId, commentId, reqDto, userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK).body(resDto);
+    }
 }

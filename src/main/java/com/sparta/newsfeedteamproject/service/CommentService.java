@@ -9,6 +9,7 @@ import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.repository.CommentRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -38,6 +39,24 @@ public class CommentService {
         CommentResDto resDto = new CommentResDto(comment);
 
         return new BaseResDto<>(HttpStatus.OK.value(), "댓글 조회가 완료되었습니다!", resDto);
+    }
+
+    @Transactional
+    public BaseResDto<CommentResDto> updateComment(Long feedId, Long commentId, CommentReqDto reqDto, User user) {
+
+        feedService.findFeed(feedId);
+        Comment comment = findComment(commentId);
+        String loginUsername = user.getUsername();
+        String commentUsername = comment.getUser().getUsername();
+
+        if (!loginUsername.equals(commentUsername)) {
+            throw new IllegalArgumentException("해당 댓글은 작성자만 수정 할 수 있습니다!");
+        }
+
+        comment.update(reqDto.getContents());
+        CommentResDto resDto = new CommentResDto(comment);
+
+        return new BaseResDto<>(HttpStatus.OK.value(), "댓글 수정이 완료되었습니다!", resDto);
     }
 
     private Comment findComment(Long id) {
