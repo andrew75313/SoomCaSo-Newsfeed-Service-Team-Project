@@ -1,5 +1,6 @@
 package com.sparta.newsfeedteamproject.jwt;
 
+import com.sparta.newsfeedteamproject.config.JwtConfig;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.service.UserService;
@@ -11,8 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-
-import static com.sparta.newsfeedteamproject.config.JwtConfig.*;
 
 @Slf4j(topic = "JwtProvider")
 @Component
@@ -27,13 +26,13 @@ public class JwtProvider {
     public String createAccessToken(String username, Status status) {
         Date date = new Date();
 
-        return BEARER_PREFIX +
+        return JwtConfig.BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username)
-                        .setExpiration(new Date(date.getTime() + accessTokenTime))
-                        .claim(AUTHORIZATION_KEY, status)
+                        .setExpiration(new Date(date.getTime() + JwtConfig.accessTokenTime))
+                        .claim(JwtConfig.AUTHORIZATION_KEY, status)
                         .setIssuedAt(date)
-                        .signWith(key, signatureAlgorithm)
+                        .signWith(JwtConfig.key, JwtConfig.signatureAlgorithm)
                         .compact();
     }
 
@@ -41,13 +40,13 @@ public class JwtProvider {
     public String createRefreshToken(String username, Status status) {
         Date date = new Date();
 
-        String refreshToken = BEARER_PREFIX +
+        String refreshToken = JwtConfig.BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username)
-                        .setExpiration(new Date(date.getTime() + refreshTokenTime))
-                        .claim(AUTHORIZATION_KEY, status)
+                        .setExpiration(new Date(date.getTime() + JwtConfig.refreshTokenTime))
+                        .claim(JwtConfig.AUTHORIZATION_KEY, status)
                         .setIssuedAt(date)
-                        .signWith(key, signatureAlgorithm)
+                        .signWith(JwtConfig.key, JwtConfig.signatureAlgorithm)
                         .compact();
         User user = userService.findByUsername(username);
         user.updateRefreshToken(refreshToken);
@@ -59,7 +58,7 @@ public class JwtProvider {
     }
 
     public String substringToken(String token) {
-        if (!token.startsWith(BEARER_PREFIX)) {
+        if (!token.startsWith(JwtConfig.BEARER_PREFIX)) {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
         return token.substring(7);
@@ -68,7 +67,7 @@ public class JwtProvider {
 
     public boolean isTokenValidate(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(JwtConfig.key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
@@ -83,7 +82,7 @@ public class JwtProvider {
     }
 
     public Claims getUserInfoFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(JwtConfig.key).build().parseClaimsJws(token).getBody();
     }
 
     @Transactional
@@ -93,7 +92,7 @@ public class JwtProvider {
         String accessToken = createAccessToken(user.getUsername(), user.getStatus());
         String refreshToken = createRefreshToken(user.getUsername(), user.getStatus());
 
-        response.addHeader(ACCESS_TOKEN_HEADER, accessToken);
-        response.addHeader(REFRESH_TOKEN_HEADER, refreshToken);
+        response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, accessToken);
+        response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER, refreshToken);
     }
 }

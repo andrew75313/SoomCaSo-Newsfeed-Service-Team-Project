@@ -6,12 +6,16 @@ import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
 import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.repository.FeedRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FeedService {
@@ -22,13 +26,22 @@ public class FeedService {
         this.feedRepository = feedRepository;
     }
 
-    public BaseResDto<List<FeedResDto>> getAllFeeds() {
+    public BaseResDto<List<FeedResDto>> getAllFeeds(int page, String sortBy, LocalDate startDate, LocalDate endDate) {
 
-        List<FeedResDto> feedList = feedRepository.findAllByOrderByCreatedAtDesc().stream()
-                .map(feed -> new FeedResDto(feed))
-                .collect(Collectors.toList());
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
+        Pageable pageable = PageRequest.of(page, 10, sort);
+        Page<FeedResDto> feedPage;
 
-        if(feedList.isEmpty()) {
+        if (startDate != null && endDate != null) {
+            feedPage = feedRepository.findAllByCreatedAtBetween(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay(), pageable)
+                    .map(FeedResDto::new);
+        } else {
+            feedPage = feedRepository.findAll(pageable).map(FeedResDto::new);
+        }
+
+        List<FeedResDto> feedList = feedPage.getContent();
+
+        if (feedList.isEmpty()) {
             return new BaseResDto<>(HttpStatus.OK.value(), "먼저 작성하여 소식을 알려보세요!", null);
         }
 
