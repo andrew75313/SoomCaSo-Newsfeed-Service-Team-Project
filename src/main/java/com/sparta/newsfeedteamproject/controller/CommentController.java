@@ -30,4 +30,13 @@ public class CommentController {
 
         return ResponseEntity.status(HttpStatus.OK).body(resDto);
     }
+
+    @GetMapping("/{feedId}/comments/{commentId}")
+    public ResponseEntity<BaseResDto<CommentResDto>> getComment(@PathVariable Long feedId,
+                                                                @PathVariable Long commentId) {
+
+        BaseResDto<CommentResDto> resDto = commentService.getComment(feedId, commentId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(resDto);
+    }
 }
