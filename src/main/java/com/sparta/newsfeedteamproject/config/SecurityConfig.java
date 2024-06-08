@@ -60,7 +60,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                 (authorizationHttpRequests) -> authorizationHttpRequests
-                        .requestMatchers("/users/signup", "/users/login").permitAll()
+                        .requestMatchers("/users/signup/**", "/users/login").permitAll()
                         .requestMatchers("/users/profile/{user_id}").permitAll()
                         .requestMatchers("/feeds/{feed_id}", "/feeds/all").permitAll()
                         .requestMatchers(HttpMethod.GET).permitAll()
