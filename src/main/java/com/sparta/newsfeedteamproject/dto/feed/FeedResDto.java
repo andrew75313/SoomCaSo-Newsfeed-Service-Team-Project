@@ -12,6 +12,7 @@ public class FeedResDto {
     private Long id;
     private String name;
     private String contents;
+    private Long likes;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -19,6 +20,7 @@ public class FeedResDto {
         this.id = feed.getId();
         this.name = feed.getUser().getName();
         this.contents = feed.getContents();
+        this.likes = feed.getLikes();
         this.createdAt = feed.getCreatedAt();
         this.modifiedAt = feed.getModifiedAt();
     }

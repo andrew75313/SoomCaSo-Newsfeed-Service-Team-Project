@@ -17,6 +17,8 @@ public class Feed extends Timestamp {
     private Long id;
     @Column(name = "contents", nullable = false)
     private String contents;
+    @Column(name = "likes", nullable = false)
+    private Long likes;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
