@@ -26,4 +26,10 @@ public class LikeController {
         BaseResDto<LikeResDto> response = likeService.likeFeed(feedId,userDetails);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    @PostMapping("/{feedId}/comments/{commentId}/like")
+    public ResponseEntity<BaseResDto<LikeResDto>> likeComment(@PathVariable Long feedId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BaseResDto<LikeResDto> reponse = likeService.likeComment(feedId,commentId,userDetails);
+        return new ResponseEntity<>(reponse,HttpStatus.OK);
+    }
 }
