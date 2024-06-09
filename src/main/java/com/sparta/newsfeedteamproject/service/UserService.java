@@ -42,7 +42,7 @@ public class UserService {
             throw new IllegalArgumentException(ExceptionMessage.DUPLICATE_EMAIL.getExceptionMessage());
         }
 
-        Status status = Status.ACTIVATE;
+        Status status = Status.UNAUTHORIZED;
         LocalDateTime statusModTime = LocalDateTime.now();
 
         User user = new User(username, password, name, email, userInfo, status, statusModTime);
@@ -132,6 +132,12 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException(ExceptionMessage.NOT_FOUND_USER.getExceptionMessage())
+        );
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException(ExceptionMessage.NOT_FOUND_USER.getExceptionMessage())
         );
     }
