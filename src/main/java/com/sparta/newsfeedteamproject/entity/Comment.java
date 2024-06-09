@@ -20,10 +20,10 @@ public class Comment extends Timestamp {
     private String contents;
     @Column(name = "likes", nullable = false)
     private Long likes;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "feed_id", nullable = false)
     private Feed feed;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
