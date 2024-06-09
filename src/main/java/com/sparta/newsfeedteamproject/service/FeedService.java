@@ -1,6 +1,7 @@
 package com.sparta.newsfeedteamproject.service;
 
 import com.sparta.newsfeedteamproject.dto.BaseResDto;
+import com.sparta.newsfeedteamproject.dto.comment.CommentResDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
 import com.sparta.newsfeedteamproject.entity.Comment;
@@ -53,14 +54,25 @@ public class FeedService {
             return new BaseResDto<>(HttpStatus.OK.value(), "먼저 작성하여 소식을 알려보세요!", null);
         }
 
+        feedList.forEach(feedResDto -> feedResDto.setComments(null));
+
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", feedList);
     }
 
     public BaseResDto<FeedResDto> getFeed(Long feed_id) {
 
-        Feed feed = findFeed(feed_id);
+        FeedResDto feedResDto = new FeedResDto(findFeed(feed_id));
+        List<CommentResDto> commentResDtoList = commentRepository.findAllByFeedId(feed_id).stream()
+                .map(CommentResDto::new)
+                .toList();
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", new FeedResDto(feed));
+        if (commentResDtoList.isEmpty()) {
+            feedResDto.setComments(null);
+        } else {
+            feedResDto.setComments(commentResDtoList);
+        }
+
+        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", feedResDto);
     }
 
     public BaseResDto<FeedResDto> createFeed(FeedReqDto reqDto, User user) {
