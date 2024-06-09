@@ -24,20 +24,24 @@ public class Feed extends Timestamp {
     private User user;
 
     public Feed(FeedReqDto reqDto, User user) {
+
         this.contents = reqDto.getContents();
         this.user = user;
         this.likes = 0L;
     }
 
     public void update(FeedReqDto reqDto) {
+
         this.contents = reqDto.getContents();
     }
 
     public void increaseLikes() {
+
         this.likes++;
     }
 
     public void decreaseLikes() {
+
         this.likes--;
     }
 }

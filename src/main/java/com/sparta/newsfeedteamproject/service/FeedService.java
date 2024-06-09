@@ -91,13 +91,17 @@ public class FeedService {
 
     @Transactional
     public void increaseFeedLikes(Long feed_id) {
+
         Feed feed = findFeed(feed_id);
+
         feed.increaseLikes();
     }
 
     @Transactional
     public void decreaseFeedLikes(Long feed_id) {
+
         Feed feed = findFeed(feed_id);
+
         feed.decreaseLikes();
     }
 

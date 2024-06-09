@@ -17,6 +17,7 @@ public class FeedResDto {
     private LocalDateTime modifiedAt;
 
     public FeedResDto(Feed feed) {
+
         this.id = feed.getId();
         this.name = feed.getUser().getName();
         this.contents = feed.getContents();
