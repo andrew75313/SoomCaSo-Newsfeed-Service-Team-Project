@@ -3,7 +3,7 @@ package com.sparta.newsfeedteamproject.exception;
 public enum ExceptionMessage {
 
     UNVALID_TOKEN("유효하지 않은 토큰입니다. 다시 로그인해주세요."),
-    DIFFERENT_WRITER("해당 게시물은 작성자만 수정/삭제 할 수 있습니다!"),
+    DIFFERENT_WRITER("해당 작업은 작성자만 수정/삭제 할 수 있습니다!"),
     DEATIVATE_USER("탈퇴한 회원입니다."),
     DUPLICATE_USERNAME("중복된 사용자 이름 입니다."),
     DUPLICATE_EMAIL("중복된 이메일 입니다."),
