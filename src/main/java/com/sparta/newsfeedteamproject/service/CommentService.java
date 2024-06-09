@@ -8,6 +8,7 @@ import com.sparta.newsfeedteamproject.entity.Comment;
 import com.sparta.newsfeedteamproject.entity.Contents;
 import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.entity.User;
+import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
 import com.sparta.newsfeedteamproject.repository.CommentRepository;
 import com.sparta.newsfeedteamproject.repository.LikeRepository;
 import org.springframework.http.HttpStatus;
@@ -55,7 +56,7 @@ public class CommentService {
         String commentUsername = comment.getUser().getUsername();
 
         if (!loginUsername.equals(commentUsername)) {
-            throw new IllegalArgumentException("해당 댓글은 작성자만 수정 할 수 있습니다!");
+            throw new IllegalArgumentException(ExceptionMessage.DIFFERENT_WRITER.getExceptionMessage());
         }
 
         comment.update(reqDto.getContents());
@@ -72,7 +73,7 @@ public class CommentService {
         String commentUsername = comment.getUser().getUsername();
 
         if (!loginUsername.equals(commentUsername)) {
-            throw new IllegalArgumentException("해당 댓글은 작성자만 삭제 할 수 있습니다!");
+            throw new IllegalArgumentException(ExceptionMessage.DIFFERENT_WRITER.getExceptionMessage());
         }
 
         deleteLikes(commentId);
@@ -110,7 +111,7 @@ public class CommentService {
     private Comment findComment(Long id) {
 
         Comment comment = commentRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다!")
+                () -> new IllegalArgumentException(ExceptionMessage.NON_EXISTENT_ELEMENT.getExceptionMessage())
         );
 
         return comment;
