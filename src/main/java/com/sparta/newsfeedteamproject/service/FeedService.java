@@ -9,6 +9,7 @@ import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.repository.CommentRepository;
 import com.sparta.newsfeedteamproject.repository.FeedRepository;
+import com.sparta.newsfeedteamproject.repository.LikeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,19 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FeedService {
 
     private final FeedRepository feedRepository;
     private final CommentRepository commentRepository;
-    private final LikeService likeService;
+    private final LikeRepository likeRepository;
 
-    public FeedService(FeedRepository feedRepository, CommentRepository commentRepository, LikeService likeService) {
+    public FeedService(FeedRepository feedRepository, CommentRepository commentRepository, LikeRepository likeRepository) {
         this.feedRepository = feedRepository;
         this.commentRepository = commentRepository;
-        this.likeService = likeService;
+        this.likeRepository = likeRepository;
     }
 
     public BaseResDto<List<FeedResDto>> getAllFeeds(int page, String sortBy, LocalDate startDate, LocalDate endDate) {
@@ -94,13 +94,16 @@ public class FeedService {
 
         feedRepository.delete(feed);
 
-        likeService.deleteAllLikes(feed_id, Contents.FEED);
+        likeRepository.findAllByContentsIdAndContents(feed_id, Contents.FEED)
+                .ifPresent(likes -> likes.stream()
+                        .forEach(like -> likeRepository.delete(like)));
 
-        List<Long> commentIdList = commentRepository.findAllByFeedId(feed_id).stream()
-                .map(Comment::getId)
-                .collect(Collectors.toList());
+        List<Comment> commentList = commentRepository.findAllByFeedId(feed_id);
 
-        likeService.deleteAllCommentsLikes(commentIdList, Contents.COMMENT);
+        commentList.forEach(comment -> {
+            likeRepository.findAllByContentsIdAndContents(comment.getId(), Contents.COMMENT)
+                    .ifPresent(likes -> likes.forEach(like -> likeRepository.delete(like)));
+        });
 
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 삭제가 완료되었습니다!", null);
     }
