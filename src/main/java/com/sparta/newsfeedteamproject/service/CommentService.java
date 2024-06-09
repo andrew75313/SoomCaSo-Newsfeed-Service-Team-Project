@@ -83,6 +83,30 @@ public class CommentService {
         return new BaseResDto<>(HttpStatus.OK.value(), "댓글 삭제가 완료되었습니다!", resDto);
     }
 
+    // 댓글 삭제 시 해당 댓글의 좋아요를 모두 삭제하는 메서드
+    private void deleteLikes(Long contentsId) {
+
+        likeRepository.findAllByContentsIdAndContents(contentsId, Contents.COMMENT)
+                .ifPresent(likes -> likes.stream()
+                        .forEach(like -> likeRepository.delete(like)));
+    }
+
+    // 댓글 좋아요가 생성될 때, 댓글의 likes 를 +1하는 메서드
+    @Transactional
+    public void increaseCommentLikes(Long commentId) {
+
+        Comment comment = findComment(commentId);
+        comment.increaseLikes();
+    }
+
+    // 댓글 좋아요가 삭제될 때, 댓글의 likes 를 -1하는 메서드
+    @Transactional
+    public void decreaseCommentLikes(Long commentId) {
+
+        Comment comment = findComment(commentId);
+        comment.decreaseLikes();
+    }
+
     private Comment findComment(Long id) {
 
         Comment comment = commentRepository.findById(id).orElseThrow(
@@ -90,13 +114,5 @@ public class CommentService {
         );
 
         return comment;
-    }
-
-    // 댓글 삭제 시 해당 댓글의 좋아요를 모두 삭제하는 메서드
-    private void deleteLikes(Long contentsId) {
-
-        likeRepository.findAllByContentsIdAndContents(contentsId, Contents.COMMENT)
-                .ifPresent(likes -> likes.stream()
-                        .forEach(like -> likeRepository.delete(like)));
     }
 }
