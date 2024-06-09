@@ -5,9 +5,11 @@ import com.sparta.newsfeedteamproject.dto.comment.CommentDelResDto;
 import com.sparta.newsfeedteamproject.dto.comment.CommentReqDto;
 import com.sparta.newsfeedteamproject.dto.comment.CommentResDto;
 import com.sparta.newsfeedteamproject.entity.Comment;
+import com.sparta.newsfeedteamproject.entity.Contents;
 import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.repository.CommentRepository;
+import com.sparta.newsfeedteamproject.repository.LikeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
     private final FeedService feedService;
 
-    public CommentService(CommentRepository commentRepository, FeedService feedService) {
+    public CommentService(CommentRepository commentRepository, LikeRepository likeRepository, FeedService feedService) {
         this.commentRepository = commentRepository;
+        this.likeRepository = likeRepository;
         this.feedService = feedService;
     }
 
@@ -71,9 +75,10 @@ public class CommentService {
             throw new IllegalArgumentException("해당 댓글은 작성자만 삭제 할 수 있습니다!");
         }
 
+        deleteLikes(commentId);
         commentRepository.delete(comment);
 
-        CommentDelResDto resDto = new CommentDelResDto(feedId);
+        CommentDelResDto resDto = new CommentDelResDto(commentId);
 
         return new BaseResDto<>(HttpStatus.OK.value(), "댓글 삭제가 완료되었습니다!", resDto);
     }
@@ -85,5 +90,13 @@ public class CommentService {
         );
 
         return comment;
+    }
+
+    // 댓글 삭제 시 해당 댓글의 좋아요를 모두 삭제하는 메서드
+    private void deleteLikes(Long contentsId) {
+
+        likeRepository.findAllByContentsIdAndContents(contentsId, Contents.COMMENT)
+                .ifPresent(likes -> likes.stream()
+                        .forEach(like -> likeRepository.delete(like)));
     }
 }
