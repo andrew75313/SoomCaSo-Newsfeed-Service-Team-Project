@@ -3,6 +3,7 @@ package com.sparta.newsfeedteamproject.jwt;
 import com.sparta.newsfeedteamproject.config.JwtConfig;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
+import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
 import com.sparta.newsfeedteamproject.service.UserService;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,7 +60,7 @@ public class JwtProvider {
 
     public String substringToken(String token) {
         if (!token.startsWith(JwtConfig.BEARER_PREFIX)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+            throw new IllegalArgumentException(ExceptionMessage.UNVALID_TOKEN.getExceptionMessage());
         }
         return token.substring(7);
     }
