@@ -121,7 +121,7 @@ public class FeedService {
         feed.decreaseLikes();
     }
 
-    private Feed findFeed(Long feed_id) {
+    public Feed findFeed(Long feed_id) {
 
         Feed feed = feedRepository.findById(feed_id).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
