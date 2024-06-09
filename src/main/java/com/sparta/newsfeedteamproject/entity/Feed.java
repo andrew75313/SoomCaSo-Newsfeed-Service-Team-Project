@@ -24,6 +24,8 @@ public class Feed extends Timestamp {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @OneToMany(mappedBy = "feed", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Comment> commentList = new ArrayList<>();
 
     public Feed(FeedReqDto reqDto, User user) {
 
