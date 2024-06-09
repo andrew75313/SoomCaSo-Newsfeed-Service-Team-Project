@@ -3,8 +3,11 @@ package com.sparta.newsfeedteamproject.service;
 import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
+import com.sparta.newsfeedteamproject.entity.Comment;
+import com.sparta.newsfeedteamproject.entity.Contents;
 import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.entity.User;
+import com.sparta.newsfeedteamproject.repository.CommentRepository;
 import com.sparta.newsfeedteamproject.repository.FeedRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,14 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FeedService {
 
     private final FeedRepository feedRepository;
+    private final CommentRepository commentRepository;
+    private final LikeService likeService;
 
-    public FeedService(FeedRepository feedRepository) {
+    public FeedService(FeedRepository feedRepository, CommentRepository commentRepository, LikeService likeService) {
         this.feedRepository = feedRepository;
+        this.commentRepository = commentRepository;
+        this.likeService = likeService;
     }
 
     public BaseResDto<List<FeedResDto>> getAllFeeds(int page, String sortBy, LocalDate startDate, LocalDate endDate) {
@@ -85,6 +93,14 @@ public class FeedService {
         }
 
         feedRepository.delete(feed);
+
+        likeService.deleteAllLikes(feed_id, Contents.FEED);
+
+        List<Long> commentIdList = commentRepository.findAllByFeedId(feed_id).stream()
+                .map(Comment::getId)
+                .collect(Collectors.toList());
+
+        likeService.deleteAllCommentsLikes(commentIdList, Contents.COMMENT);
 
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 삭제가 완료되었습니다!", null);
     }
