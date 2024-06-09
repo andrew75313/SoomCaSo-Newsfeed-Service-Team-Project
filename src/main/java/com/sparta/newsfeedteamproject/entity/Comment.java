@@ -1,16 +1,17 @@
 package com.sparta.newsfeedteamproject.entity;
 
-import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
+import com.sparta.newsfeedteamproject.dto.comment.CommentReqDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
+import lombok.Setter;
 
 @Entity
 @Getter
-@Table(name = "NewsFeed") // 매핑할 테이블의 이름을 지정
+@Setter
+@Table(name = "comment")
 @NoArgsConstructor
-public class Feed extends Timestamp {
+public class Comment extends Timestamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,28 +21,28 @@ public class Feed extends Timestamp {
     @Column(name = "likes", nullable = false)
     private Long likes;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_id", nullable = false)
+    private Feed feed;
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Feed(FeedReqDto reqDto, User user) {
-
+    public Comment(CommentReqDto reqDto, Feed feed, User user, Long likes) {
         this.contents = reqDto.getContents();
+        this.feed = feed;
         this.user = user;
-        this.likes = 0L;
+        this.likes = likes;
     }
 
-    public void update(FeedReqDto reqDto) {
-
-        this.contents = reqDto.getContents();
+    public void update(String contents) {
+        this.contents = contents;
     }
 
     public void increaseLikes() {
-
         this.likes++;
     }
 
     public void decreaseLikes() {
-
         this.likes--;
     }
 }

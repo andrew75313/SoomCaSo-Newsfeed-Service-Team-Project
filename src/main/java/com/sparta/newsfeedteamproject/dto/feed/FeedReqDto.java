@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class FeedReqDto {
+
     @NotBlank
     private String contents;
 }
