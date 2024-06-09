@@ -4,7 +4,9 @@ import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,9 +21,11 @@ public class Feed extends Timestamp {
     private String contents;
     @Column(name = "likes", nullable = false)
     private Long likes;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @OneToMany(mappedBy = "feed", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Comment> commentList = new ArrayList<>();
 
     public Feed(FeedReqDto reqDto, User user) {
 
