@@ -1,14 +1,16 @@
 package com.sparta.newsfeedteamproject.jwt;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
+@Slf4j(topic = "Redis")
+@Component
 @RequiredArgsConstructor
-@Service
 public class RedisUtil {
     private final StringRedisTemplate template;
 

@@ -2,6 +2,7 @@ package com.sparta.newsfeedteamproject.entity;
 
 public enum Status {
 
+    UNAUTHORIZED(UserStatus.UNAUTHORIZED),
     ACTIVATE(UserStatus.ACTIVATE),
     DEACTIVATE(UserStatus.DEACTIVATE);
 
@@ -16,6 +17,7 @@ public enum Status {
     }
 
     public static class UserStatus {
+        public static final String UNAUTHORIZED = "UNAUTHORIZED";
         public static final String ACTIVATE = "ACTIVATE";
         public static final String DEACTIVATE = "DEACTIVATE";
     }
