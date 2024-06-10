@@ -73,7 +73,7 @@ public class UserService {
         checkUser.setStatusModTime(LocalDateTime.now());
 
         userRepository.save(checkUser);
-        logout(checkUser.getUsername());
+        logout(checkUser.getId(),userDetails);
     }
 
     @Transactional
