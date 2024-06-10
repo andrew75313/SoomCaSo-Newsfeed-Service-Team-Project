@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="like")
+@Table(name="likes")
 @NoArgsConstructor
 public class Like extends Timestamp{
 
