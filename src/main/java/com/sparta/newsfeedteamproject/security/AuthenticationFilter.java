@@ -42,8 +42,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             UserAuthReqDto requestDto = new ObjectMapper().readValue(request.getInputStream(), UserAuthReqDto.class);
             //로그인 시도
 
-            //유저 상태 확인
-            if (!Status.ACTIVATE.equals((((UserDetailsImpl) userDetailsService.loadUserByUsername(requestDto.getUsername())).getUser()).getStatus())) {
+            Status userStatus = (((UserDetailsImpl) userDetailsService.loadUserByUsername(requestDto.getUsername())).getUser()).getStatus();
+            //유저 상태 확인 (탈퇴한 회원)
+            if (Status.DEACTIVATE.equals(userStatus)) {
                 log.error("탈퇴한 회원");
                 throw new AccountStatusException(ExceptionMessage.DEATIVATE_USER.getExceptionMessage()) {
                     @Override
@@ -53,6 +54,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 };
             }
 
+            //유저 상태 확인 (미 인증 회원)
+            if (Status.UNAUTHORIZED.equals(userStatus)) {
+                log.error("미 인증한 회원");
+                throw new AccountStatusException(ExceptionMessage.UNAUTHORIZED_USER.getExceptionMessage()) {
+                    @Override
+                    public String getMessage() {
+                        return super.getMessage();
+                    }
+                };
+            }
+
+            //정상 일 때 로그인 시도
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
                             requestDto.getUsername(),
@@ -63,7 +76,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         } catch (IOException | AccountStatusException e) {
             log.error(e.getMessage());
-            FilterExceptionHandler.handleExceptionInFilter(response,e);
+            FilterExceptionHandler.handleExceptionInFilter(response, e);
         }
         return null;
     }
@@ -82,18 +95,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, accesstoken);
         response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER, refreshtoken);
-
-        BaseResDto baseResDto = new BaseResDto(HttpStatus.NO_CONTENT.value(), "로그인 성공", null);
-        ResponseEntity<BaseResDto> responseDto = new ResponseEntity<>(baseResDto, HttpStatus.OK);
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto.getBody()));
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         log.info("로그인 실패");
         response.setStatus(401);
+        FilterExceptionHandler.handleExceptionInFilter(response, failed);
     }
 }
