@@ -149,7 +149,7 @@
 ### 2. Feed 기능
     - Feed 등록
        - 로그인된 사용자는 내용을 입력하여 Feed를 등록할 수 있습니다.
-       - 등록된 Feed는 사용자에게 반환되어 등록 결과를 확인할 수 있습니다.
+       - 등록된 Feed는 ID, 사용자 아이디, 내용, 좋아요 수, 작성일, 수정일, 댓글을 포함하고 사용자에게 반환되어 등록 결과를 확인할 수 있습니다.
     - Feed 단건 조회
        - 로그인을 하지 않은 상태에서도 등록되어있는 Feed를 조회할 수 있습니다.
        - 단건 조회 시 Feed ID, 작성자 아이디, 내용, 좋아요 수, 해당 피드에 작성된 댓글들을 반환합니다.
@@ -166,33 +166,45 @@
     - Feed 삭제
        - 로그인된 사용자는 본인이 작성한 Feed에 한하여 삭제할 수 있습니다.
        - AT를 사용하여 인가 처리된 사용자에 한하여 삭제를 진행할 수 있습니다.
-       - Feed를 삭제할 경우 해당 Feed에 작성된 Comment와 Like 데이터가 함께 삭제됩니다.
+       - Feed를 삭제할 경우 해당 Feed와 연결된 Comment와 Like 데이터가 함께 삭제됩니다.
        - 삭제 처리 완료 후 서버는 Client에게 처리 완료 메세지를 반환합니다.
 ### 3. Comment 기능
     - Comment 등록
-       - 
+       - 로그인된 사용자는 내용을 입력하여 Feed에 Comment를 등록할 수 있습니다.
+       - 등록된 Comment는 ID, 내용, 작성일, 수정일, 작성자 이름, Feed ID를 포함하고 사용자에게 반환되어 등록 결과를 확인할 수 있습니다.
     - Comment 조회
-       - 
+       - 로그인을 하지 않은 상태에서도 등록되어있는 Feed를 조회할 수 있습니다.
+       - 조회하고자 하는 Feed의 ID와 Comment ID를 입력받아 해당 Comment를 조회합니다.
+       - 조회된 Comment는 ID, 내용, 작성일, 수정일, 작성자 이름, Feed ID를 포함하고 사용자에게 반환됩니다.
     - Comment 수정
-       - 
+       - 로그인된 사용자는 본인이 작성한 Comment에 한하여 수정할 수 있습니다.
+       - 수정은 내용만 가능합니다.
+       - AT를 사용하여 인가 처리된 사용자에 한하여 수정을 진행할 수 있습니다.
+       - 수정 후 수정된 Comment를 반환하여 사용자는 결과를 확인할 수 있습니다.
     - Comment 삭제
-       - 
+       - 로그인된 사용자는 본인이 작성한 Comment에 한하여 삭제할 수 있습니다.
+       - AT를 사용하여 인가 처리된 사용자에 한하여 삭제을 진행할 수 있습니다.
+       - Comment를 삭제한 경우 해당 Comment와 연결된 Like 데이터가 함께 삭제됩니다.
+       - 삭제 처리 완료 후 서버는 삭제된 Comment의 ID와 처리 완료 메세지를 반환합니다.
 ### 4. Like 기능
     - Feed Like 증감
-       - 
+       - 로그인된 사용자는 Feed의 Like를 증감할 수 있습니다.
+       - Like를 요청하는 Feed에 해당 사용자의 Like 데이터가 존재하지 않으면 증가되고, 존재하면 감소됩니다.
     - Comment Like 증감
-       - 
+       - 로그인된 사용자는 Comment의 Like를 증감할 수 있습니다.
+       - Like를 요청하는 Comment에 해당 사용자의 Like 데이터가 존재하지 않으면 증가되고, 존재하면 감소됩니다.
 
 ## ✍ Wireframe
-
+<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fa5fa57d2-be4e-40a6-aded-c8c405d4cab5%2Fwireframe.png?table=block&id=1a46c55e-1bf5-42fe-969f-93c491cb464b&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=1920&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
 
 ## 🔗 ERD
-
+<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2F853033e2-a62d-497c-8568-7fb91c03418b%2FSpring_%25EC%2588%2599%25EB%25A0%25A8%25EC%25A3%25BC%25EC%25B0%25A8_9%25EC%25A1%25B0_%25EB%2589%25B4%25EC%258A%25A4%25ED%2594%25BC%25EB%2593%259C_%25ED%2594%2584%25EB%25A1%259C%25EC%25A0%259D%25ED%258A%25B8_ERD.drawio.png?table=block&id=88819fcb-1354-4814-8c0f-21fe51b40197&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=1370&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
 
 ## 💥 API Document
-
+<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fcdcc7e90-622e-4f91-b8ec-b9b7da84c6ba%2F2fbd84a9-2660-449b-9778-99f7d03fa220%2FScreenshot_2024-06-10_at_22.07.40.png?table=block&id=c1e15ffe-daf7-4419-bc84-0e32dfdfb8b1&spaceId=cdcc7e90-622e-4f91-b8ec-b9b7da84c6ba&width=2000&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
 
 ## ⚖️ Code Convention
-
+<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fcdcc7e90-622e-4f91-b8ec-b9b7da84c6ba%2F5a06c44a-535e-4c2d-a244-66f742c1baf2%2F%25EC%258A%25A4%25ED%2581%25AC%25EB%25A6%25B0%25EC%2583%25B7_2024-06-10_221545.png?table=block&id=d35dd764-eeb6-41c0-a46f-27affbfbc101&spaceId=cdcc7e90-622e-4f91-b8ec-b9b7da84c6ba&width=1460&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
 
 ## 📏 Git Rules
+<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fcdcc7e90-622e-4f91-b8ec-b9b7da84c6ba%2Fad9831e8-276d-497e-8a4b-b5210b0a08fd%2FScreenshot_2024-06-10_at_22.16.01.png?table=block&id=2f9f4939-b22e-4dee-8e21-78765430ba59&spaceId=cdcc7e90-622e-4f91-b8ec-b9b7da84c6ba&width=1460&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
