@@ -97,18 +97,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, accesstoken);
         response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER, refreshtoken);
-
-        BaseResDto baseResDto = new BaseResDto(HttpStatus.NO_CONTENT.value(), "로그인 성공", null);
-        ResponseEntity<BaseResDto> responseDto = new ResponseEntity<>(baseResDto, HttpStatus.OK);
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto.getBody()));
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         log.info("로그인 실패");
         response.setStatus(401);
+        FilterExceptionHandler.handleExceptionInFilter(response, failed);
     }
 }
