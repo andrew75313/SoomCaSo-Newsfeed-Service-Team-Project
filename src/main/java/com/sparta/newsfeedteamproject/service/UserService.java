@@ -77,10 +77,12 @@ public class UserService {
     }
 
     @Transactional
-    public void logout(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException(ExceptionMessage.NOT_FOUND_USER.getExceptionMessage())
-        );
+    public void logout(Long userId, UserDetailsImpl userDetails) {
+        User user = findById(userId);
+        User jwtUser = userDetails.getUser();
+        if (!user.getId().equals(jwtUser.getId())) {
+            throw new IllegalArgumentException(ExceptionMessage.INCORRECT_USER.getExceptionMessage());
+        }
         user.deleteRefreshToken();
     }
 
