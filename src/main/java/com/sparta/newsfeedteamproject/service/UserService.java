@@ -48,9 +48,8 @@ public class UserService {
         User user = new User(username, password, name, email, userInfo, status, statusModTime);
         userRepository.save(user);
     }
-
+    @Transactional
     public void withdraw(Long userId, UserAuthReqDto reqDto, UserDetailsImpl userDetails) {
-
         String username = userDetails.getUser().getUsername();
 
         User loginUser = findByUsername(username);
@@ -74,20 +73,22 @@ public class UserService {
         checkUser.setStatusModTime(LocalDateTime.now());
 
         userRepository.save(checkUser);
+        logout(checkUser.getId(),userDetails);
     }
 
     @Transactional
-    public void logout(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException(ExceptionMessage.NOT_FOUND_USER.getExceptionMessage())
-        );
+    public void logout(Long userId, UserDetailsImpl userDetails) {
+        User user = findById(userId);
+        User jwtUser = userDetails.getUser();
+        if (!user.getId().equals(jwtUser.getId())) {
+            throw new IllegalArgumentException(ExceptionMessage.INCORRECT_USER.getExceptionMessage());
+        }
         user.deleteRefreshToken();
     }
 
     public ProfileResDto getProfile(Long userId) {
-        User checkUser = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException(ExceptionMessage.NOT_FOUND_USER.getExceptionMessage())
-        );
+        User checkUser = findById(userId);
+
         if (checkUser.getStatus().equals(Status.DEACTIVATE)) {
             throw new IllegalArgumentException(ExceptionMessage.DEATIVATE_USER.getExceptionMessage());
         }

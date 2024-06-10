@@ -108,7 +108,7 @@ public class CommentService {
         comment.decreaseLikes();
     }
 
-    private Comment findComment(Long id) {
+    public Comment findComment(Long id) {
 
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException(ExceptionMessage.NON_EXISTENT_ELEMENT.getExceptionMessage())
