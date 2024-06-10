@@ -8,6 +8,7 @@ import com.sparta.newsfeedteamproject.entity.Comment;
 import com.sparta.newsfeedteamproject.entity.Contents;
 import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.entity.User;
+import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
 import com.sparta.newsfeedteamproject.repository.CommentRepository;
 import com.sparta.newsfeedteamproject.repository.FeedRepository;
 import com.sparta.newsfeedteamproject.repository.LikeRepository;
@@ -88,7 +89,7 @@ public class FeedService {
         Feed feed = findFeed(feed_id);
 
         if (!feed.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("해당 게시물은 작성자만 수정/삭제 할 수 있습니다!");
+            throw new IllegalArgumentException(ExceptionMessage.DIFFERENT_WRITER.getExceptionMessage());
         }
 
         feed.update(reqDto);
@@ -101,7 +102,7 @@ public class FeedService {
         Feed feed = findFeed(feed_id);
 
         if (!feed.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("해당 게시물은 작성자만 수정/삭제 할 수 있습니다!");
+            throw new IllegalArgumentException(ExceptionMessage.DIFFERENT_WRITER.getExceptionMessage());
         }
 
         feedRepository.delete(feed);
@@ -139,7 +140,7 @@ public class FeedService {
     public Feed findFeed(Long feed_id) {
 
         Feed feed = feedRepository.findById(feed_id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시물을 찾을 수 없습니다!")
+                () -> new IllegalArgumentException(ExceptionMessage.NON_EXISTENT_ELEMENT.getExceptionMessage())
         );
 
         return feed;
