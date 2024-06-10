@@ -41,6 +41,12 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<BaseResDto<Void>> login() {
+        BaseResDto<Void> responseDto = new BaseResDto<>(HttpStatus.NO_CONTENT.value(), "로그인 성공!", null);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         String token = jwtProvider.substringToken(jwtProvider.getJwtFromHeader(request, JwtConfig.ACCESS_TOKEN_HEADER));
