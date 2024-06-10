@@ -13,7 +13,7 @@ import java.util.List;
 public class FeedResDto {
 
     private Long id;
-    private String name;
+    private String username;
     private String contents;
     private Long likes;
     private LocalDateTime createdAt;
@@ -23,7 +23,7 @@ public class FeedResDto {
     public FeedResDto(Feed feed) {
 
         this.id = feed.getId();
-        this.name = feed.getUser().getName();
+        this.username = feed.getUser().getUsername();
         this.contents = feed.getContents();
         this.likes = feed.getLikes();
         this.createdAt = feed.getCreatedAt();
