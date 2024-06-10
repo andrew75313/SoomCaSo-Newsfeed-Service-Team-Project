@@ -21,4 +21,19 @@ public class FilterExceptionHandler {
             log.error(e.getMessage());
         }
     }
+
+    public static <T extends Exception> void handleJwtExceptionInFilter(HttpServletResponse servletResponse, String errorMessage) {
+        log.error(errorMessage);
+
+        //서블릿 응답 UTF-8 인코딩
+        servletResponse.setContentType("text/plain; charset=UTF-8");
+        servletResponse.setCharacterEncoding("UTF-8");
+
+        servletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        try{
+            servletResponse.getWriter().write("error :"+ errorMessage);
+        }catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
 }
