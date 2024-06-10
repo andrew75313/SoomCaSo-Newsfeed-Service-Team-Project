@@ -42,8 +42,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             UserAuthReqDto requestDto = new ObjectMapper().readValue(request.getInputStream(), UserAuthReqDto.class);
             //로그인 시도
 
-            //유저 상태 확인
-            if (!Status.ACTIVATE.equals((((UserDetailsImpl) userDetailsService.loadUserByUsername(requestDto.getUsername())).getUser()).getStatus())) {
+            Status userStatus = (((UserDetailsImpl) userDetailsService.loadUserByUsername(requestDto.getUsername())).getUser()).getStatus();
+            //유저 상태 확인 (탈퇴한 회원)
+            if (Status.DEACTIVATE.equals(userStatus)) {
                 log.error("탈퇴한 회원");
                 throw new AccountStatusException(ExceptionMessage.DEATIVATE_USER.getExceptionMessage()) {
                     @Override
@@ -52,6 +53,20 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                     }
                 };
             }
+
+            //유저 상태 확인 (미 인증 회원)
+            if (Status.UNAUTHORIZED.equals(userStatus)) {
+                log.error("미 인증한 회원");
+                throw new AccountStatusException(ExceptionMessage.UNAUTHORIZED_USER.getExceptionMessage()) {
+                    @Override
+                    public String getMessage() {
+                        return super.getMessage();
+                    }
+                };
+            }
+
+
+            //유저 상태 확인 (
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -63,7 +78,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         } catch (IOException | AccountStatusException e) {
             log.error(e.getMessage());
-            FilterExceptionHandler.handleExceptionInFilter(response,e);
+            FilterExceptionHandler.handleExceptionInFilter(response, e);
         }
         return null;
     }
