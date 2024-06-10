@@ -1,5 +1,6 @@
 package com.sparta.newsfeedteamproject.controller;
 
+import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.service.MailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +18,15 @@ public class MailController {
     private final MailService mailService;
 
     @GetMapping("/signup/{email_addr}/authcode")
-    public ResponseEntity<String> sendMail(@PathVariable String email_addr) throws MessagingException {
+    public ResponseEntity<BaseResDto> sendMail(@PathVariable String email_addr) throws MessagingException {
         mailService.sendMail(email_addr);
-        return ResponseEntity.ok("메일을 확인하세요");
+        BaseResDto responsDto = new BaseResDto(HttpStatus.OK.value(), "인증번호가 메일로 발송되었습니다.", null);
+        return new  ResponseEntity<>(responsDto, HttpStatus.OK);
     }
 
     @PostMapping("/signup/{email_addr}/authcode")
-    public ResponseEntity<String> checkMail(@PathVariable String email_addr, @RequestParam String code) {
-        mailService.signupEmailVerify(email_addr, code);
-        return new ResponseEntity<>("인증번호 검증이 완료되었습니다.", HttpStatus.OK);
+    public ResponseEntity<BaseResDto> checkMail(@PathVariable String email_addr, @RequestParam String code) {
+        BaseResDto responsDto = mailService.signupEmailVerify(email_addr, code);
+        return new ResponseEntity<>(responsDto, HttpStatus.OK);
     }
 }

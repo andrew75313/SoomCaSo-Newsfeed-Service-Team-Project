@@ -1,5 +1,6 @@
 package com.sparta.newsfeedteamproject.service;
 
+import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
@@ -87,12 +88,12 @@ public class MailService {
     }
 
     @Transactional
-    public ResponseEntity<String> signupEmailVerify(String email, String code) {
-        if (verifyEmailCode(email, code)) {
-            User user = userService.findByEmail(email);
-            user.setStatus(Status.ACTIVATE);
-            return ResponseEntity.ok("이메일 인증이 완료되었습니다.");
+    public BaseResDto signupEmailVerify(String email, String code) {
+        if (!verifyEmailCode(email, code))  {
+            return new BaseResDto(HttpStatus.BAD_REQUEST.value(), "인증번호 검증에 실패했습니다.", null);
         }
-        return new ResponseEntity<>("인증번호가 잘못 입력되었습니다.", HttpStatus.BAD_REQUEST);
+        User user = userService.findByEmail(email);
+        user.setStatus(Status.ACTIVATE);
+        return new BaseResDto(HttpStatus.OK.value(), "인증번호 검증에 성공했습니다.", null);
     }
 }
