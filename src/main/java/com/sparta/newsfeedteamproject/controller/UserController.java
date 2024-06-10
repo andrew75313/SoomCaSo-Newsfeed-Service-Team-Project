@@ -1,6 +1,5 @@
 package com.sparta.newsfeedteamproject.controller;
 
-import com.sparta.newsfeedteamproject.config.JwtConfig;
 import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.dto.user.ProfileResDto;
 import com.sparta.newsfeedteamproject.dto.user.SignupReqDto;
@@ -9,17 +8,23 @@ import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import com.sparta.newsfeedteamproject.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j(topic = "user controller")
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
     private final UserService userService;
@@ -47,11 +52,9 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request) {
-        String token = jwtProvider.substringToken(jwtProvider.getJwtFromHeader(request, JwtConfig.ACCESS_TOKEN_HEADER));
-        String username = jwtProvider.getUserInfoFromToken(token).getSubject();
-        userService.logout(username);
+    @PostMapping("/logout/{userId}")
+    public ResponseEntity<Void> logout(@PathVariable Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.logout(userId, userDetails);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
