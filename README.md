@@ -201,10 +201,10 @@
 <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2F853033e2-a62d-497c-8568-7fb91c03418b%2FSpring_%25EC%2588%2599%25EB%25A0%25A8%25EC%25A3%25BC%25EC%25B0%25A8_9%25EC%25A1%25B0_%25EB%2589%25B4%25EC%258A%25A4%25ED%2594%25BC%25EB%2593%259C_%25ED%2594%2584%25EB%25A1%259C%25EC%25A0%259D%25ED%258A%25B8_ERD.drawio.png?table=block&id=88819fcb-1354-4814-8c0f-21fe51b40197&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=1370&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
 
 ## 💥 API Document
-<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fcdcc7e90-622e-4f91-b8ec-b9b7da84c6ba%2F2fbd84a9-2660-449b-9778-99f7d03fa220%2FScreenshot_2024-06-10_at_22.07.40.png?table=block&id=c1e15ffe-daf7-4419-bc84-0e32dfdfb8b1&spaceId=cdcc7e90-622e-4f91-b8ec-b9b7da84c6ba&width=2000&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
+<img src="https://github.com/ggumi030/Newsfeed-Team-Project/assets/154594004/747a9bd9-f8ee-453c-94e6-24b726d0c266">
 
 ## ⚖️ Code Convention
-<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fcdcc7e90-622e-4f91-b8ec-b9b7da84c6ba%2F5a06c44a-535e-4c2d-a244-66f742c1baf2%2F%25EC%258A%25A4%25ED%2581%25AC%25EB%25A6%25B0%25EC%2583%25B7_2024-06-10_221545.png?table=block&id=d35dd764-eeb6-41c0-a46f-27affbfbc101&spaceId=cdcc7e90-622e-4f91-b8ec-b9b7da84c6ba&width=1460&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
+<img src="https://github.com/ggumi030/Newsfeed-Team-Project/assets/154594004/8fca7dad-c132-4a09-ad75-996536f1d069">
 
 ## 📏 Git Rules
-<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fcdcc7e90-622e-4f91-b8ec-b9b7da84c6ba%2Fad9831e8-276d-497e-8a4b-b5210b0a08fd%2FScreenshot_2024-06-10_at_22.16.01.png?table=block&id=2f9f4939-b22e-4dee-8e21-78765430ba59&spaceId=cdcc7e90-622e-4f91-b8ec-b9b7da84c6ba&width=1460&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
+<img src="https://github.com/ggumi030/Newsfeed-Team-Project/assets/154594004/c8ec6534-a5b4-4766-966d-0ee77f9cf639">
