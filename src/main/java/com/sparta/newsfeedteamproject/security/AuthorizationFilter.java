@@ -23,7 +23,7 @@ import java.util.Objects;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 public class AuthorizationFilter extends OncePerRequestFilter {
-    private final String[] whiteList = {"/users/signup/*", "/users/login", "/users/profile/{user_id}", "/feeds/{feed_id}", "/feeds/all", "/feeds/{feedId}/comments/{commentId}"};
+    private final String[] whiteList = {"/users/signup", "/users/login", "/users/profile/{userId}", "/feeds/{feedId}", "/feeds/all", "/feeds/{feedId}/comments/{commentId}"};
     private final JwtProvider jwtProvider;
     private final UserDetailsServiceImpl userDetailsService;
 
