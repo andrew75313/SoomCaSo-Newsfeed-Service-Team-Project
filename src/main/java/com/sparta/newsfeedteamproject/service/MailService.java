@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,12 +69,19 @@ public class MailService {
         return message;
     }
 
-    public void sendMail(String toEmail) throws MessagingException {
-        if (redisUtil.existData(toEmail)) {
-            redisUtil.deleteData(toEmail);
+    public void sendMail(String email) throws MessagingException {
+        User user = userService.findByEmail(email);
+        if (!user.getStatus().equals(Status.UNAUTHORIZED)) {
+            throw new IllegalArgumentException(ExceptionMessage.AUTHENTICATED_USER.getExceptionMessage());
+        }
+        if (!user.getEmail().equals(email)) {
+            throw new IllegalArgumentException(ExceptionMessage.INCORRECT_USER.getExceptionMessage());
+        }
+        if (redisUtil.existData(email)) {
+            redisUtil.deleteData(email);
         }
 
-        MimeMessage message = createMail(toEmail);
+        MimeMessage message = createMail(email);
         javaMailSender.send(message);
     }
 
@@ -94,6 +100,7 @@ public class MailService {
         }
         User user = userService.findByEmail(email);
         user.setStatus(Status.ACTIVATE);
+        redisUtil.deleteData(email);
         return new BaseResDto(HttpStatus.OK.value(), "인증번호 검증에 성공했습니다.", null);
     }
 }
