@@ -4,6 +4,7 @@ import com.sparta.newsfeedteamproject.config.JwtConfig;
 import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
 import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ import java.util.Objects;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 public class AuthorizationFilter extends OncePerRequestFilter {
-    private final String[] whiteList = {"/users/signup", "/users/login", "/users/profile/{userId}", "/feeds/{feedId}", "/feeds/all", "/feeds/{feedId}/comments/{commentId}"};
+    private final String[] whiteList = {"/users/signup", "/users/login", "/feeds/all", "/users/signup/**"};
     private final JwtProvider jwtProvider;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -34,7 +35,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-        if (!whiteListCheck(req.getRequestURI())) {
+        if (!whiteListCheck(req.getRequestURI()) && !"GET".equals(req.getMethod())) {
 
             String raw_accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtConfig.ACCESS_TOKEN_HEADER);
             String raw_refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtConfig.REFRESH_TOKEN_HEADER);
@@ -44,8 +45,10 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                     String accessTokenValue = jwtProvider.substringToken(raw_accessTokenValue);
                     String refreshTokenValue = jwtProvider.substringToken(raw_refreshTokenValue);
 
-                    log.info(accessTokenValue);
-                    log.info(refreshTokenValue);
+                    //둘 다 유효하지 않을 때
+                    if (!jwtProvider.isTokenValidate(accessTokenValue) && !jwtProvider.isTokenValidate(refreshTokenValue)) {
+                        throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.2");
+                    }
 
                     Claims info = jwtProvider.getUserInfoFromToken(accessTokenValue);
 
@@ -54,11 +57,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                     //DB의 refreshtoken과 같은지 비교 (조작된 토큰인지 확인)
                     if (!(Objects.equals(refreshTokenValue, jwtProvider.substringToken((userDetailsImpl.getUser().getRefreshToken()))))) {
                         throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.1");
-                    }
-
-                    //둘 다 유효하지 않을 때
-                    if (!jwtProvider.isTokenValidate(accessTokenValue) && !jwtProvider.isTokenValidate(refreshTokenValue)) {
-                        throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.2");
                     }
 
                     //로그아웃 요청일 땐 Header에 토큰 추가 X
@@ -80,7 +78,16 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                 } else {
                     throw new IllegalArgumentException("해당 기능을 사용하기 위해선 로그인 해야 합니다.");
                 }
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
+                log.error(e.getMessage());
+                FilterExceptionHandler.handleExceptionInFilter(res, e);
+                return;
+            } catch (ExpiredJwtException e){
+                log.error(e.getMessage());
+                FilterExceptionHandler.handleJwtExceptionInFilter(res,"만료된 JWT token입니다.");
+                return;
+            }
+            catch (Exception e){
                 log.error(e.getMessage());
                 FilterExceptionHandler.handleExceptionInFilter(res, e);
                 return;
