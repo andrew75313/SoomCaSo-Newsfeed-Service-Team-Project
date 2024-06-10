@@ -13,6 +13,18 @@
 
 <br/>
 
+# 📜 Table
+- [Team](#-Team)
+- [Tech Stack](#-Tech-Stack)
+- [Feature](#-Feature)
+- [Wireframe](#-Wireframe)
+- [ERD](#-ERD)
+- [API Document](#-API-Document)
+- [Code Convention](#-Code-Convention)
+- [Git Rules](#-Git-Rules)
+
+<br/>
+
 ## 🤝 Team
 <table>
   <tbody>
@@ -99,15 +111,24 @@
 </div>
 </details>
 
+[(Back to top)](#-table)
+
+<br/>
+
 ## 🤖 Tech Stack
-|     Type     |                                                                        Tech                                                                         |        Version        |        Comment        |
-|:------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------:|:---------------------:|:---------------------:|
-| IDE / EDITOR |            ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)            |           -           |           -           |
-|  Framework   |                  ![Spring](https://img.shields.io/badge/springBoot-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)                   |         3.1.0         |           -           |
-|   Language   |                      ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)                      |        JDK 17         |           -           |
-|     IaaS     | ![AWS EC2](https://img.shields.io/badge/AWS_EC2-RDS?style=for-the-badge&logo=amazonec2&logoColor=white&logoSize=amg&labelColor=FF9900&color=FF9900) | Amazon Linux 2023 AMI |           -           |
-|   Database   | ![AWS RDS](https://img.shields.io/badge/AWS_RDS-RDS?style=for-the-badge&logo=amazonrds&logoColor=white&logoSize=amg&labelColor=527FFF&color=527FFF) |   MySQL ver.8.0.35    |         Main          |
-|   Database   |                      ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)                      |         7.2.5         | Used On EC2, <br> Sub |
+|     Type     |                                                                                                                                                                                               Tech                                                                                                                                                                                                |        Version        |                                    Comment                                     |
+|:------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:---------------------:|:------------------------------------------------------------------------------:|
+| IDE / EDITOR |                                                                                                                                   ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)                                                                                                                                   |           -           |                                       -                                        |
+|  Framework   |                                                                                                                                         ![Spring](https://img.shields.io/badge/springBoot-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)                                                                                                                                          |         3.1.0         |                                       -                                        |
+|   Language   |                                                                                                                                             ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)                                                                                                                                             |        JDK 17         |                                       -                                        |
+|     IaaS     |                                                                                                                        ![AWS EC2](https://img.shields.io/badge/AWS_EC2-RDS?style=for-the-badge&logo=amazonec2&logoColor=white&logoSize=amg&labelColor=FF9900&color=FF9900)                                                                                                                        | Amazon Linux 2023 AMI |                                       -                                        |
+|   Database   |                                                                  ![AWS RDS](https://img.shields.io/badge/AWS_RDS-RDS?style=for-the-badge&logo=amazonrds&logoColor=white&logoSize=amg&labelColor=527FFF&color=527FFF) <br> ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)                                                                  |   MySQL ver.8.0.35    |                                      Main                                      |
+|   Database   |                                                                                                                                             ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)                                                                                                                                             |         7.2.5         |                             Used On EC2, <br> Sub                              |
+|    Record    |                                                        ![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)                                                                                                                                                                                                                               |           -           | [Link](https://teamsparta.notion.site/9-9999-c6dca1e35cec4e9086fccd3d0d624176) |
+
+[(Back to top)](#-table)
+
+<br/>
 
 ## 🚀 Feature
 
@@ -194,17 +215,37 @@
        - 로그인된 사용자는 Comment의 Like를 증감할 수 있습니다.
        - Like를 요청하는 Comment에 해당 사용자의 Like 데이터가 존재하지 않으면 증가되고, 존재하면 감소됩니다.
 
+[(Back to top)](#-table)
+
+<br/>
+
 ## ✍ Wireframe
 <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fa5fa57d2-be4e-40a6-aded-c8c405d4cab5%2Fwireframe.png?table=block&id=1a46c55e-1bf5-42fe-969f-93c491cb464b&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=1920&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
+
+[(Back to top)](#-table)
+
+<br/>
 
 ## 🔗 ERD
 <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2F853033e2-a62d-497c-8568-7fb91c03418b%2FSpring_%25EC%2588%2599%25EB%25A0%25A8%25EC%25A3%25BC%25EC%25B0%25A8_9%25EC%25A1%25B0_%25EB%2589%25B4%25EC%258A%25A4%25ED%2594%25BC%25EB%2593%259C_%25ED%2594%2584%25EB%25A1%259C%25EC%25A0%259D%25ED%258A%25B8_ERD.drawio.png?table=block&id=88819fcb-1354-4814-8c0f-21fe51b40197&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=1370&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
 
+[(Back to top)](#-table)
+
+<br/>
+
 ## 💥 API Document
 <img src="https://github.com/ggumi030/Newsfeed-Team-Project/assets/154594004/747a9bd9-f8ee-453c-94e6-24b726d0c266">
 
+[(Back to top)](#-table)
+
+<br/>
+
 ## ⚖️ Code Convention
 <img src="https://github.com/ggumi030/Newsfeed-Team-Project/assets/154594004/8fca7dad-c132-4a09-ad75-996536f1d069">
+
+[(Back to top)](#-table)
+
+<br/>
 
 ## 📏 Git Rules
 <img src="https://github.com/ggumi030/Newsfeed-Team-Project/assets/154594004/c8ec6534-a5b4-4766-966d-0ee77f9cf639">
