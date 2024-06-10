@@ -60,10 +60,10 @@ public class FeedService {
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", feedList);
     }
 
-    public BaseResDto<FeedResDto> getFeed(Long feed_id) {
+    public BaseResDto<FeedResDto> getFeed(Long feedId) {
 
-        FeedResDto feedResDto = new FeedResDto(findFeed(feed_id));
-        List<CommentResDto> commentResDtoList = commentRepository.findAllByFeedId(feed_id).stream()
+        FeedResDto feedResDto = new FeedResDto(findFeed(feedId));
+        List<CommentResDto> commentResDtoList = commentRepository.findAllByFeedId(feedId).stream()
                 .map(CommentResDto::new)
                 .toList();
 
@@ -84,9 +84,9 @@ public class FeedService {
     }
 
     @Transactional
-    public BaseResDto<FeedResDto> updateFeed(Long feed_id, FeedReqDto reqDto, User user) {
+    public BaseResDto<FeedResDto> updateFeed(Long feedId, FeedReqDto reqDto, User user) {
 
-        Feed feed = findFeed(feed_id);
+        Feed feed = findFeed(feedId);
 
         if (!feed.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException(ExceptionMessage.DIFFERENT_WRITER.getExceptionMessage());
@@ -97,9 +97,9 @@ public class FeedService {
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 수정이 완료되었습니다!", new FeedResDto(feed));
     }
 
-    public BaseResDto<FeedResDto> deleteFeed(Long feed_id, User user) {
+    public BaseResDto<FeedResDto> deleteFeed(Long feedId, User user) {
 
-        Feed feed = findFeed(feed_id);
+        Feed feed = findFeed(feedId);
 
         if (!feed.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException(ExceptionMessage.DIFFERENT_WRITER.getExceptionMessage());
@@ -107,11 +107,11 @@ public class FeedService {
 
         feedRepository.delete(feed);
 
-        likeRepository.findAllByContentsIdAndContents(feed_id, Contents.FEED)
+        likeRepository.findAllByContentsIdAndContents(feedId, Contents.FEED)
                 .ifPresent(likes -> likes.stream()
                         .forEach(like -> likeRepository.delete(like)));
 
-        List<Comment> commentList = commentRepository.findAllByFeedId(feed_id);
+        List<Comment> commentList = commentRepository.findAllByFeedId(feedId);
 
         commentList.forEach(comment -> {
             likeRepository.findAllByContentsIdAndContents(comment.getId(), Contents.COMMENT)
@@ -122,24 +122,24 @@ public class FeedService {
     }
 
     @Transactional
-    public void increaseFeedLikes(Long feed_id) {
+    public void increaseFeedLikes(Long feedId) {
 
-        Feed feed = findFeed(feed_id);
+        Feed feed = findFeed(feedId);
 
         feed.increaseLikes();
     }
 
     @Transactional
-    public void decreaseFeedLikes(Long feed_id) {
+    public void decreaseFeedLikes(Long feedId) {
 
-        Feed feed = findFeed(feed_id);
+        Feed feed = findFeed(feedId);
 
         feed.decreaseLikes();
     }
 
-    public Feed findFeed(Long feed_id) {
+    public Feed findFeed(Long feedId) {
 
-        Feed feed = feedRepository.findById(feed_id).orElseThrow(
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
                 () -> new IllegalArgumentException(ExceptionMessage.NON_EXISTENT_ELEMENT.getExceptionMessage())
         );
 
