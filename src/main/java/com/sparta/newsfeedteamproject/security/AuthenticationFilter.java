@@ -65,9 +65,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 };
             }
 
-
-            //유저 상태 확인 (
-
+            //정상 일 때 로그인 시도
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
                             requestDto.getUsername(),
