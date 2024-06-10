@@ -11,7 +11,8 @@ public enum ExceptionMessage {
     INCORRECT_PASSWORD("비밀번호가 일치하지 않아 요청을 처리할 수 없습니다."),
     NOT_FOUND_USER("존재하지 않는 사용자입니다."),
     SAME_PASSWORD("기존 비밀번호와 일치하여 수정이 불가능합니다."),
-    NON_EXISTENT_ELEMENT("해당 요소가 존재하지 않습니다.");
+    NON_EXISTENT_ELEMENT("해당 요소가 존재하지 않습니다."),
+    UNAUTHORIZED_USER("미인증된 회원입니다.");
 
     private String message;
 
