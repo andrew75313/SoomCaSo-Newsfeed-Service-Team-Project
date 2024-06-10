@@ -23,7 +23,7 @@ import java.util.Objects;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 public class AuthorizationFilter extends OncePerRequestFilter {
-    private final String[] whiteList = {"/users/signup", "/users/login", "/users/profile/{userId}", "/feeds/{feedId}", "/feeds/all", "/feeds/{feedId}/comments/{commentId}"};
+    private final String[] whiteList = {"/users/signup", "/users/login", "/feeds/all", "/users/signup/**"};
     private final JwtProvider jwtProvider;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -34,7 +34,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-        if (!whiteListCheck(req.getRequestURI())) {
+        if (!whiteListCheck(req.getRequestURI()) && !"GET".equals(req.getMethod())) {
 
             String raw_accessTokenValue = jwtProvider.getJwtFromHeader(req, JwtConfig.ACCESS_TOKEN_HEADER);
             String raw_refreshTokenValue = jwtProvider.getJwtFromHeader(req, JwtConfig.REFRESH_TOKEN_HEADER);
