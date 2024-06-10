@@ -47,6 +47,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                     log.info(accessTokenValue);
                     log.info(refreshTokenValue);
 
+                    //둘 다 유효하지 않을 때
+                    if (!jwtProvider.isTokenValidate(accessTokenValue) && !jwtProvider.isTokenValidate(refreshTokenValue)) {
+                        throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.2");
+                    }
+
                     Claims info = jwtProvider.getUserInfoFromToken(accessTokenValue);
 
                     UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetailsService.loadUserByUsername(info.getSubject());
@@ -54,11 +59,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                     //DB의 refreshtoken과 같은지 비교 (조작된 토큰인지 확인)
                     if (!(Objects.equals(refreshTokenValue, jwtProvider.substringToken((userDetailsImpl.getUser().getRefreshToken()))))) {
                         throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.1");
-                    }
-
-                    //둘 다 유효하지 않을 때
-                    if (!jwtProvider.isTokenValidate(accessTokenValue) && !jwtProvider.isTokenValidate(refreshTokenValue)) {
-                        throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.2");
                     }
 
                     //로그아웃 요청일 땐 Header에 토큰 추가 X
