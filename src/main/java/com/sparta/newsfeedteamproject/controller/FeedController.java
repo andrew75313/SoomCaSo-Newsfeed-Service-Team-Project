@@ -36,10 +36,10 @@ public class FeedController {
     }
 
 
-    @GetMapping("/{feed_id}")
-    public ResponseEntity<BaseResDto<FeedResDto>> getFeed(@PathVariable(name = "feed_id") Long feed_id) {
+    @GetMapping("/{feedId}")
+    public ResponseEntity<BaseResDto<FeedResDto>> getFeed(@PathVariable(name = "feedId") Long feedId) {
 
-        BaseResDto<FeedResDto> response = feedService.getFeed(feed_id);
+        BaseResDto<FeedResDto> response = feedService.getFeed(feedId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -53,21 +53,21 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/{feed_id}")
-    public ResponseEntity<BaseResDto<FeedResDto>> updateFeed(@PathVariable(name = "feed_id") Long feed_id,
+    @PutMapping("/{feedId}")
+    public ResponseEntity<BaseResDto<FeedResDto>> updateFeed(@PathVariable(name = "feedId") Long feedId,
                                                              @Valid @RequestBody FeedReqDto reqDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        BaseResDto<FeedResDto> response = feedService.updateFeed(feed_id, reqDto, userDetails.getUser());
+        BaseResDto<FeedResDto> response = feedService.updateFeed(feedId, reqDto, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/{feed_id}")
-    public ResponseEntity<BaseResDto<FeedResDto>> deleteFeed(@PathVariable(name = "feed_id") Long feed_id,
+    @DeleteMapping("/{feedId}")
+    public ResponseEntity<BaseResDto<FeedResDto>> deleteFeed(@PathVariable(name = "feedId") Long feedId,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        BaseResDto<FeedResDto> response = feedService.deleteFeed(feed_id, userDetails.getUser());
+        BaseResDto<FeedResDto> response = feedService.deleteFeed(feedId, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
