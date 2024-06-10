@@ -1,5 +1,6 @@
 package com.sparta.newsfeedteamproject.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -23,5 +24,14 @@ public class GlobalExceptionHandler {
                 .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
         return new ResponseEntity<>(errmsgs, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> ConstraintViolationExceptionHandler(ConstraintViolationException e){
+        StringBuilder errmsgs = new StringBuilder();
+        e.getConstraintViolations().forEach(violation -> {
+            errmsgs.append(violation.getPropertyPath() + ": " + violation.getMessage() + "\n");
+        });
+        return new ResponseEntity<>(errmsgs.toString(), HttpStatus.BAD_REQUEST);
     }
 }
