@@ -105,8 +105,6 @@ public class FeedService {
             throw new IllegalArgumentException(ExceptionMessage.DIFFERENT_WRITER.getExceptionMessage());
         }
 
-        feedRepository.delete(feed);
-
         likeRepository.findAllByContentsIdAndContents(feedId, Contents.FEED)
                 .ifPresent(likes -> likes.stream()
                         .forEach(like -> likeRepository.delete(like)));
@@ -117,6 +115,8 @@ public class FeedService {
             likeRepository.findAllByContentsIdAndContents(comment.getId(), Contents.COMMENT)
                     .ifPresent(likes -> likes.forEach(like -> likeRepository.delete(like)));
         });
+
+        feedRepository.delete(feed);
 
         return new BaseResDto<>(HttpStatus.OK.value(), "게시물 삭제가 완료되었습니다!", null);
     }
