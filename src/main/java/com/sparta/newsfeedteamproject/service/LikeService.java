@@ -50,6 +50,9 @@ public class LikeService {
     }
 
     public BaseResDto<LikeResDto> likeComment(Long feedId, Long commentId, UserDetailsImpl userDetails) {
+        feedService.findFeed(feedId);
+        commentService.findComment(commentId);
+
         User user = userDetails.getUser();
         Optional<Like> like = likeRepository.findByContentsIdAndContentsAndUser(commentId, Contents.COMMENT, user);
         LikeResDto likeResDto = new LikeResDto(commentId, Contents.COMMENT);
