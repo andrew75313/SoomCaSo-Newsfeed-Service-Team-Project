@@ -63,8 +63,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/profile/{userId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/feeds/{feedId}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/feed/all").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/{feedId}/comments/{commentId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/feeds/all").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/feeds/{feedId}/comments/{commentId}").permitAll()
                         .anyRequest().authenticated()
 
         );
