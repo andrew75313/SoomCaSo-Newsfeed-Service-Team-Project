@@ -1,9 +1,9 @@
 package com.sparta.newsfeedteamproject.config;
 
-import com.sparta.newsfeedteamproject.jwt.JwtProvider;
 import com.sparta.newsfeedteamproject.security.AuthenticationFilter;
 import com.sparta.newsfeedteamproject.security.AuthorizationFilter;
 import com.sparta.newsfeedteamproject.security.UserDetailsServiceImpl;
+import com.sparta.newsfeedteamproject.util.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -58,7 +58,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                 (authorizationHttpRequests) -> authorizationHttpRequests
-                        .requestMatchers("/users/signup","/users/signup/**", "/users/login").permitAll()
+                        .requestMatchers("/users/signup", "/users/signup/**", "/users/login").permitAll()
                         .requestMatchers("/users/profile/{userId}").permitAll()
                         .requestMatchers("/feeds/{feedId}", "/feeds/all").permitAll()
                         .requestMatchers(HttpMethod.GET).permitAll()

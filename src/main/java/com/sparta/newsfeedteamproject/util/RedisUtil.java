@@ -1,4 +1,4 @@
-package com.sparta.newsfeedteamproject.jwt;
+package com.sparta.newsfeedteamproject.util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

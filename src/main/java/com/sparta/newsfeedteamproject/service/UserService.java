@@ -48,6 +48,7 @@ public class UserService {
         User user = new User(username, password, name, email, userInfo, status, statusModTime);
         userRepository.save(user);
     }
+
     @Transactional
     public void withdraw(Long userId, UserAuthReqDto reqDto, UserDetailsImpl userDetails) {
         String username = userDetails.getUser().getUsername();
@@ -73,7 +74,7 @@ public class UserService {
         checkUser.setStatusModTime(LocalDateTime.now());
 
         userRepository.save(checkUser);
-        logout(checkUser.getId(),userDetails);
+        logout(checkUser.getId(), userDetails);
     }
 
     @Transactional

@@ -2,7 +2,7 @@ package com.sparta.newsfeedteamproject.security;
 
 import com.sparta.newsfeedteamproject.config.JwtConfig;
 import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
-import com.sparta.newsfeedteamproject.jwt.JwtProvider;
+import com.sparta.newsfeedteamproject.util.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;

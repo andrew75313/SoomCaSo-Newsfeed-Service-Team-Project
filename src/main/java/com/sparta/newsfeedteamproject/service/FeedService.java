@@ -1,6 +1,6 @@
 package com.sparta.newsfeedteamproject.service;
 
-import com.sparta.newsfeedteamproject.dto.BaseResDto;
+import com.sparta.newsfeedteamproject.dto.MessageResDto;
 import com.sparta.newsfeedteamproject.dto.comment.CommentResDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
@@ -36,7 +36,7 @@ public class FeedService {
         this.likeRepository = likeRepository;
     }
 
-    public BaseResDto<List<FeedResDto>> getAllFeeds(int page, String sortBy, LocalDate startDate, LocalDate endDate) {
+    public MessageResDto<List<FeedResDto>> getAllFeeds(int page, String sortBy, LocalDate startDate, LocalDate endDate) {
 
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, 10, sort);
@@ -52,15 +52,15 @@ public class FeedService {
         List<FeedResDto> feedList = feedPage.getContent();
 
         if (feedList.isEmpty()) {
-            return new BaseResDto<>(HttpStatus.OK.value(), "먼저 작성하여 소식을 알려보세요!", null);
+            return new MessageResDto<>(HttpStatus.OK.value(), "먼저 작성하여 소식을 알려보세요!", null);
         }
 
         feedList.forEach(feedResDto -> feedResDto.setComments(null));
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", feedList);
+        return new MessageResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", feedList);
     }
 
-    public BaseResDto<FeedResDto> getFeed(Long feedId) {
+    public MessageResDto<FeedResDto> getFeed(Long feedId) {
 
         FeedResDto feedResDto = new FeedResDto(findFeed(feedId));
         List<CommentResDto> commentResDtoList = commentRepository.findAllByFeedId(feedId).stream()
@@ -73,18 +73,18 @@ public class FeedService {
             feedResDto.setComments(commentResDtoList);
         }
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", feedResDto);
+        return new MessageResDto<>(HttpStatus.OK.value(), "게시물 조회가 완료되었습니다!", feedResDto);
     }
 
-    public BaseResDto<FeedResDto> createFeed(FeedReqDto reqDto, User user) {
+    public MessageResDto<FeedResDto> createFeed(FeedReqDto reqDto, User user) {
 
         Feed feed = feedRepository.save(new Feed(reqDto, user));
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 작성이 완료되었습니다!", new FeedResDto(feed));
+        return new MessageResDto<>(HttpStatus.OK.value(), "게시물 작성이 완료되었습니다!", new FeedResDto(feed));
     }
 
     @Transactional
-    public BaseResDto<FeedResDto> updateFeed(Long feedId, FeedReqDto reqDto, User user) {
+    public MessageResDto<FeedResDto> updateFeed(Long feedId, FeedReqDto reqDto, User user) {
 
         Feed feed = findFeed(feedId);
 
@@ -94,10 +94,10 @@ public class FeedService {
 
         feed.update(reqDto);
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 수정이 완료되었습니다!", new FeedResDto(feed));
+        return new MessageResDto<>(HttpStatus.OK.value(), "게시물 수정이 완료되었습니다!", new FeedResDto(feed));
     }
 
-    public BaseResDto<FeedResDto> deleteFeed(Long feedId, User user) {
+    public MessageResDto<FeedResDto> deleteFeed(Long feedId, User user) {
 
         Feed feed = findFeed(feedId);
 
@@ -118,7 +118,7 @@ public class FeedService {
 
         feedRepository.delete(feed);
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "게시물 삭제가 완료되었습니다!", null);
+        return new MessageResDto<>(HttpStatus.OK.value(), "게시물 삭제가 완료되었습니다!", null);
     }
 
     @Transactional
