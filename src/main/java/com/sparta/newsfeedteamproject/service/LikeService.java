@@ -1,7 +1,7 @@
 package com.sparta.newsfeedteamproject.service;
 
-import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.dto.LikeResDto;
+import com.sparta.newsfeedteamproject.dto.MessageResDto;
 import com.sparta.newsfeedteamproject.entity.Contents;
 import com.sparta.newsfeedteamproject.entity.Like;
 import com.sparta.newsfeedteamproject.entity.User;
@@ -22,7 +22,7 @@ public class LikeService {
     private final FeedService feedService;
     private final CommentService commentService;
 
-    public BaseResDto<LikeResDto> likeFeed(Long feedId, UserDetailsImpl userDetails) {
+    public MessageResDto<LikeResDto> likeFeed(Long feedId, UserDetailsImpl userDetails) {
         feedService.findFeed(feedId);
         User user = userDetails.getUser();
         Optional<Like> like = likeRepository.findByContentsIdAndContentsAndUser(feedId, Contents.FEED, user);
@@ -35,7 +35,7 @@ public class LikeService {
             //게시물 DB에 저장된 좋아요 수 +1
             feedService.increaseFeedLikes(feedId); //FeedSerivce에 구현되어야함
 
-            return new BaseResDto(HttpStatus.OK.value(), "게시글을 좋아요하였습니다!", likeResDto);
+            return new MessageResDto(HttpStatus.OK.value(), "게시글을 좋아요하였습니다!", likeResDto);
 
         } else {//좋아요 취소
             Like oldLike = like.orElseThrow(
@@ -45,11 +45,11 @@ public class LikeService {
 
             //게시물 DB에 저장된 좋아요 수 -1
             feedService.decreaseFeedLikes(feedId); //FeedSerivce에 구현되어야함
-            return new BaseResDto(HttpStatus.OK.value(), "게시글 좋아요를 취소하였습니다!", likeResDto);
+            return new MessageResDto(HttpStatus.OK.value(), "게시글 좋아요를 취소하였습니다!", likeResDto);
         }
     }
 
-    public BaseResDto<LikeResDto> likeComment(Long feedId, Long commentId, UserDetailsImpl userDetails) {
+    public MessageResDto<LikeResDto> likeComment(Long feedId, Long commentId, UserDetailsImpl userDetails) {
         feedService.findFeed(feedId);
         commentService.findComment(commentId);
 
@@ -63,28 +63,28 @@ public class LikeService {
 
             commentService.increaseCommentLikes(commentId);
 
-            return new BaseResDto<>(HttpStatus.OK.value(),"댓글을 좋아요하였습니다!", likeResDto);
+            return new MessageResDto<>(HttpStatus.OK.value(), "댓글을 좋아요하였습니다!", likeResDto);
 
-        } else{
+        } else {
             Like oldLike = like.orElseThrow(
                     () -> new IllegalArgumentException(ExceptionMessage.NON_EXISTENT_ELEMENT.getExceptionMessage())
             );
             likeRepository.delete(oldLike);
 
             commentService.decreaseCommentLikes(commentId);
-            return new BaseResDto<>(HttpStatus.OK.value(),"댓글 좋아요를 취소하였습니다.",likeResDto);
+            return new MessageResDto<>(HttpStatus.OK.value(), "댓글 좋아요를 취소하였습니다.", likeResDto);
         }
     }
 
     //게시글 or 댓글 삭제 시 해당 게시글 or 댓글의 좋아요를 모두 삭제하는 메서드
-    public void deleteAllLikes(Long contentsId, Contents contentType){
-         likeRepository.findAllByContentsIdAndContents(contentsId, contentType)
-                 .ifPresent(likes -> likes.stream()
-                         .forEach(like -> likeRepository.delete(like)));
+    public void deleteAllLikes(Long contentsId, Contents contentType) {
+        likeRepository.findAllByContentsIdAndContents(contentsId, contentType)
+                .ifPresent(likes -> likes.stream()
+                        .forEach(like -> likeRepository.delete(like)));
     }
 
     //게시글 삭제 시 해당 게시글의 댓글들의 좋아요를 모두 삭제하는 메서드
-    public void deleteAllCommentsLikes(List<Long> contentsIds, Contents contentType){
+    public void deleteAllCommentsLikes(List<Long> contentsIds, Contents contentType) {
         contentsIds.stream()
                 .forEach(id -> deleteAllLikes(id, contentType));
     }

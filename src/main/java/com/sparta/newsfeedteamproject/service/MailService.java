@@ -1,10 +1,10 @@
 package com.sparta.newsfeedteamproject.service;
 
-import com.sparta.newsfeedteamproject.dto.BaseResDto;
+import com.sparta.newsfeedteamproject.dto.MessageResDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
-import com.sparta.newsfeedteamproject.jwt.RedisUtil;
+import com.sparta.newsfeedteamproject.util.RedisUtil;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -94,13 +94,13 @@ public class MailService {
     }
 
     @Transactional
-    public BaseResDto signupEmailVerify(String email, String code) {
-        if (!verifyEmailCode(email, code))  {
-            return new BaseResDto(HttpStatus.BAD_REQUEST.value(), "인증번호 검증에 실패했습니다.", null);
+    public MessageResDto signupEmailVerify(String email, String code) {
+        if (!verifyEmailCode(email, code)) {
+            return new MessageResDto(HttpStatus.BAD_REQUEST.value(), "인증번호 검증에 실패했습니다.", null);
         }
         User user = userService.findByEmail(email);
         user.setStatus(Status.ACTIVATE);
         redisUtil.deleteData(email);
-        return new BaseResDto(HttpStatus.OK.value(), "인증번호 검증에 성공했습니다.", null);
+        return new MessageResDto(HttpStatus.OK.value(), "인증번호 검증에 성공했습니다.", null);
     }
 }

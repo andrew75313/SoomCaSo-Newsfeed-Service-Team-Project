@@ -1,7 +1,7 @@
 package com.sparta.newsfeedteamproject.controller;
 
-import com.sparta.newsfeedteamproject.dto.BaseResDto;
 import com.sparta.newsfeedteamproject.dto.LikeResDto;
+import com.sparta.newsfeedteamproject.dto.MessageResDto;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
 import com.sparta.newsfeedteamproject.service.LikeService;
 import jakarta.validation.Valid;
@@ -22,14 +22,14 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/{feedId}/like")
-    public ResponseEntity<BaseResDto<LikeResDto>> likeFeed(@PathVariable("feedId") @Valid Long feedId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        BaseResDto<LikeResDto> response = likeService.likeFeed(feedId,userDetails);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity<MessageResDto<LikeResDto>> likeFeed(@PathVariable("feedId") @Valid Long feedId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        MessageResDto<LikeResDto> response = likeService.likeFeed(feedId, userDetails);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/{feedId}/comments/{commentId}/like")
-    public ResponseEntity<BaseResDto<LikeResDto>> likeComment(@PathVariable Long feedId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        BaseResDto<LikeResDto> reponse = likeService.likeComment(feedId,commentId,userDetails);
-        return new ResponseEntity<>(reponse,HttpStatus.OK);
+    public ResponseEntity<MessageResDto<LikeResDto>> likeComment(@PathVariable Long feedId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        MessageResDto<LikeResDto> reponse = likeService.likeComment(feedId, commentId, userDetails);
+        return new ResponseEntity<>(reponse, HttpStatus.OK);
     }
 }

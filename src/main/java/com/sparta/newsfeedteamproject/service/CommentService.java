@@ -1,6 +1,6 @@
 package com.sparta.newsfeedteamproject.service;
 
-import com.sparta.newsfeedteamproject.dto.BaseResDto;
+import com.sparta.newsfeedteamproject.dto.MessageResDto;
 import com.sparta.newsfeedteamproject.dto.comment.CommentDelResDto;
 import com.sparta.newsfeedteamproject.dto.comment.CommentReqDto;
 import com.sparta.newsfeedteamproject.dto.comment.CommentResDto;
@@ -28,27 +28,27 @@ public class CommentService {
         this.feedService = feedService;
     }
 
-    public BaseResDto<CommentResDto> createComment(Long feedId, CommentReqDto reqDto, User user) {
+    public MessageResDto<CommentResDto> createComment(Long feedId, CommentReqDto reqDto, User user) {
 
         Feed feed = feedService.findFeed(feedId);
         Comment comment = new Comment(reqDto, feed, user, 0L);
         Comment saveComment = commentRepository.save(comment);
         CommentResDto resDto = new CommentResDto(saveComment);
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "댓글 작성이 완료되었습니다!", resDto);
+        return new MessageResDto<>(HttpStatus.OK.value(), "댓글 작성이 완료되었습니다!", resDto);
     }
 
-    public BaseResDto<CommentResDto> getComment(Long feedId, Long commentId) {
+    public MessageResDto<CommentResDto> getComment(Long feedId, Long commentId) {
 
         feedService.findFeed(feedId);
         Comment comment = findComment(commentId);
         CommentResDto resDto = new CommentResDto(comment);
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "댓글 조회가 완료되었습니다!", resDto);
+        return new MessageResDto<>(HttpStatus.OK.value(), "댓글 조회가 완료되었습니다!", resDto);
     }
 
     @Transactional
-    public BaseResDto<CommentResDto> updateComment(Long feedId, Long commentId, CommentReqDto reqDto, User user) {
+    public MessageResDto<CommentResDto> updateComment(Long feedId, Long commentId, CommentReqDto reqDto, User user) {
 
         feedService.findFeed(feedId);
         Comment comment = findComment(commentId);
@@ -62,10 +62,10 @@ public class CommentService {
         comment.update(reqDto.getContents());
         CommentResDto resDto = new CommentResDto(comment);
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "댓글 수정이 완료되었습니다!", resDto);
+        return new MessageResDto<>(HttpStatus.OK.value(), "댓글 수정이 완료되었습니다!", resDto);
     }
 
-    public BaseResDto<CommentDelResDto> deleteComment(Long feedId, Long commentId, User user) {
+    public MessageResDto<CommentDelResDto> deleteComment(Long feedId, Long commentId, User user) {
 
         feedService.findFeed(feedId);
         Comment comment = findComment(commentId);
@@ -81,7 +81,7 @@ public class CommentService {
 
         CommentDelResDto resDto = new CommentDelResDto(commentId);
 
-        return new BaseResDto<>(HttpStatus.OK.value(), "댓글 삭제가 완료되었습니다!", resDto);
+        return new MessageResDto<>(HttpStatus.OK.value(), "댓글 삭제가 완료되었습니다!", resDto);
     }
 
     // 댓글 삭제 시 해당 댓글의 좋아요를 모두 삭제하는 메서드

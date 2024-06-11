@@ -1,4 +1,4 @@
-package com.sparta.newsfeedteamproject.jwt;
+package com.sparta.newsfeedteamproject.util;
 
 import com.sparta.newsfeedteamproject.config.JwtConfig;
 import com.sparta.newsfeedteamproject.entity.Status;

@@ -22,7 +22,7 @@ public enum ExceptionMessage {
         this.message = message;
     }
 
-    public String getExceptionMessage(){
+    public String getExceptionMessage() {
         return this.message;
     }
 }

@@ -4,11 +4,9 @@ import com.sparta.newsfeedteamproject.dto.comment.CommentReqDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "comment")
 @NoArgsConstructor
 public class Comment extends Timestamp {

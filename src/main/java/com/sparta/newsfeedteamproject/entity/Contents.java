@@ -15,7 +15,7 @@ public enum Contents {
         return this.contents;
     }
 
-    public static class ContentsType{
+    public static class ContentsType {
         public static final String FEED = "FEED";
         public static final String COMMENT = "COMMENT";
     }

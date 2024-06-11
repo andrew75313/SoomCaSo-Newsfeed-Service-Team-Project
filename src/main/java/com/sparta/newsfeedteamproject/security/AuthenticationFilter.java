@@ -2,12 +2,12 @@ package com.sparta.newsfeedteamproject.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.newsfeedteamproject.config.JwtConfig;
-import com.sparta.newsfeedteamproject.dto.BaseResDto;
+import com.sparta.newsfeedteamproject.dto.MessageResDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
 import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
-import com.sparta.newsfeedteamproject.jwt.JwtProvider;
+import com.sparta.newsfeedteamproject.util.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -96,8 +96,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, accesstoken);
         response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER, refreshtoken);
 
-        BaseResDto baseResDto = new BaseResDto(HttpStatus.NO_CONTENT.value(), "로그인 성공", null);
-        ResponseEntity<BaseResDto> responseDto = new ResponseEntity<>(baseResDto, HttpStatus.OK);
+        MessageResDto messageResDto = new MessageResDto(HttpStatus.NO_CONTENT.value(), "로그인 성공", null);
+        ResponseEntity<MessageResDto> responseDto = new ResponseEntity<>(messageResDto, HttpStatus.OK);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
