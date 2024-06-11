@@ -58,10 +58,13 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                 (authorizationHttpRequests) -> authorizationHttpRequests
-                        .requestMatchers("/users/signup", "/users/signup/**", "/users/login").permitAll()
-                        .requestMatchers("/users/profile/{userId}").permitAll()
-                        .requestMatchers("/feeds/{feedId}", "/feeds/all").permitAll()
-                        .requestMatchers(HttpMethod.GET).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/signup").permitAll()
+                        .requestMatchers("/users/signup/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/profile/{userId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/feeds/{feedId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/feed/all").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/{feedId}/comments/{commentId}").permitAll()
                         .anyRequest().authenticated()
 
         );
