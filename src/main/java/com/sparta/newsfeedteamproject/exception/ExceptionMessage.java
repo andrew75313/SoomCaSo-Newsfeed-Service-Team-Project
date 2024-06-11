@@ -13,7 +13,8 @@ public enum ExceptionMessage {
     SAME_PASSWORD("기존 비밀번호와 일치하여 수정이 불가능합니다."),
     NON_EXISTENT_ELEMENT("해당 요소가 존재하지 않습니다."),
     UNAUTHORIZED_USER("미인증된 회원입니다."),
-    AUTHENTICATED_USER("인증이 완료된 사용자입니다.");
+    AUTHENTICATED_USER("인증이 완료된 사용자입니다."),
+    EXPIRATION_TOKEN("만료된 토큰입니다. 다시 로그인해주세요.");
 
     private String message;
 
