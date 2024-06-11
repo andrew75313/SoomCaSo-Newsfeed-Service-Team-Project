@@ -1,6 +1,7 @@
 package com.sparta.newsfeedteamproject.security;
 
 import com.sparta.newsfeedteamproject.config.JwtConfig;
+import com.sparta.newsfeedteamproject.exception.ExceptionMessage;
 import com.sparta.newsfeedteamproject.exception.FilterExceptionHandler;
 import com.sparta.newsfeedteamproject.util.JwtProvider;
 import io.jsonwebtoken.Claims;
@@ -47,22 +48,22 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
                     //둘 다 유효하지 않을 때
                     if (!jwtProvider.isTokenValidate(accessTokenValue) && !jwtProvider.isTokenValidate(refreshTokenValue)) {
-                        throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.2");
+                        throw new IllegalArgumentException(ExceptionMessage.UNVALID_TOKEN.getExceptionMessage());
                     }
 
-                    Claims info = jwtProvider.getUserInfoFromToken(accessTokenValue);
+                    Claims info = jwtProvider.getUserInfoFromToken(refreshTokenValue);
 
                     UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetailsService.loadUserByUsername(info.getSubject());
 
                     //DB의 refreshtoken과 같은지 비교 (조작된 토큰인지 확인)
                     if (!(Objects.equals(refreshTokenValue, jwtProvider.substringToken((userDetailsImpl.getUser().getRefreshToken()))))) {
-                        throw new IllegalArgumentException("유효하지 않은 토큰입니다. 다시 로그인해주세요.1");
+                        throw new IllegalArgumentException(ExceptionMessage.UNVALID_TOKEN.getExceptionMessage());
                     }
 
                     //로그아웃 요청일 땐 Header에 토큰 추가 X
-                    if (!"/users/logout".equals(req.getRequestURI())) {
-                        if ((!jwtProvider.isTokenValidate(accessTokenValue) && jwtProvider.isTokenValidate(refreshTokenValue))) //refresh만 정상일 때
-                        {
+                    if (!req.getRequestURI().matches("/users/logout/\\d+")) {
+                        if ((!jwtProvider.isTokenValidate(accessTokenValue) && jwtProvider.isTokenValidate(refreshTokenValue))) { //refresh만 정상일 때
+
                             //토큰 재생성
                             jwtProvider.reCreateTokens(info.getSubject(), res);
                             log.info("토큰 재생성 완료");
@@ -82,12 +83,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                 log.error(e.getMessage());
                 FilterExceptionHandler.handleExceptionInFilter(res, e);
                 return;
-            } catch (ExpiredJwtException e){
+            } catch (ExpiredJwtException e) {
                 log.error(e.getMessage());
-                FilterExceptionHandler.handleJwtExceptionInFilter(res,"만료된 JWT token입니다.");
+                FilterExceptionHandler.handleJwtExceptionInFilter(res, ExceptionMessage.EXPIRATION_TOKEN);
                 return;
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 log.error(e.getMessage());
                 FilterExceptionHandler.handleExceptionInFilter(res, e);
                 return;
