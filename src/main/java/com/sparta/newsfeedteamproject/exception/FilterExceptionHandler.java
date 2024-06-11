@@ -22,8 +22,8 @@ public class FilterExceptionHandler {
         }
     }
 
-    public static <T extends Exception> void handleJwtExceptionInFilter(HttpServletResponse servletResponse, String errorMessage) {
-        log.error(errorMessage);
+    public static void handleJwtExceptionInFilter(HttpServletResponse servletResponse, ExceptionMessage errorMessage) {
+        log.error(errorMessage.getExceptionMessage());
 
         //서블릿 응답 UTF-8 인코딩
         servletResponse.setContentType("text/plain; charset=UTF-8");
