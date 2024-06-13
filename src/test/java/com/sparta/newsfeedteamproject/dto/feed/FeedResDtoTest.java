@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 class FeedResDtoTest {
     @Test
-    @DisplayName("FeedResDto test")
+    @DisplayName("FeedResDto setComments test")
     public void test(){
         //given
         List<CommentResDto> comments = new ArrayList<>();
