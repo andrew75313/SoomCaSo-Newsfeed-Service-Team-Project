@@ -43,9 +43,8 @@ public class UserService {
         }
 
         Status status = Status.UNAUTHORIZED;
-        LocalDateTime statusModTime = LocalDateTime.now();
 
-        User user = new User(username, password, name, email, userInfo, status, statusModTime);
+        User user = new User(username, password, name, email, userInfo, status);
         userRepository.save(user);
     }
 
@@ -124,9 +123,8 @@ public class UserService {
         String name = reqDto.getNewName();
         String userInfo = reqDto.getNewUserInfo();
         String newPassword = passwordEncoder.encode(reqDto.getNewPassword());
-        LocalDateTime modifiedAt = LocalDateTime.now();
 
-        checkUser.update(name, userInfo, newPassword, modifiedAt);
+        checkUser.update(name, userInfo, newPassword);
         userRepository.save(checkUser);
 
         return new ProfileResDto(checkUser);

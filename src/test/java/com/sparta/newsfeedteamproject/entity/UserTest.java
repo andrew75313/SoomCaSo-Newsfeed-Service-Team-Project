@@ -16,16 +16,14 @@ class UserTest {
         String name = "name";
         String userInfo = "userInfo";
         String newPassword = "newPassword";
-        LocalDateTime modifiedDate = LocalDateTime.now();
 
         //when
-        user.update(name,userInfo,newPassword,modifiedDate);
+        user.update(name,userInfo,newPassword);
 
         //then
         assertEquals(name,user.getName());
         assertEquals(userInfo,user.getUserInfo());
         assertEquals(newPassword,user.getPassword());
-        assertEquals(modifiedDate,user.getModifiedAt());
 
     }
 

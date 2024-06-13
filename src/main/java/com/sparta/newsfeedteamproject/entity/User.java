@@ -36,25 +36,23 @@ public class User extends Timestamp {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime statusModTime;
 
-    public User(String username, String password, String name, String email, String userInfo, Status status, LocalDateTime statusModTime) {
+    public User(String username, String password, String name, String email, String userInfo, Status status) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
         this.userInfo = userInfo;
         this.status = status;
-        this.statusModTime = statusModTime;
     }
 
     public void deleteRefreshToken() {
         this.refreshToken = "";
     }
 
-    public void update(String name, String userInfo, String newPassword, LocalDateTime modifiedAt) {
+    public void update(String name, String userInfo, String newPassword) {
         this.name = name;
         this.userInfo = userInfo;
         this.password = newPassword;
-        this.setModifiedAt(modifiedAt);
     }
 
     public void updateRefreshToken(String refreshToken) {
