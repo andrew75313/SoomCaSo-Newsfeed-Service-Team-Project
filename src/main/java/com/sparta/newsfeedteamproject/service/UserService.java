@@ -70,7 +70,6 @@ public class UserService {
         }
 
         checkUser.setStatus(Status.DEACTIVATE);
-        checkUser.setStatusModTime(LocalDateTime.now());
 
         userRepository.save(checkUser);
         logout(checkUser.getId(), userDetails);

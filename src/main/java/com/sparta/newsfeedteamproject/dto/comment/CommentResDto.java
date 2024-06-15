@@ -1,11 +1,13 @@
 package com.sparta.newsfeedteamproject.dto.comment;
 
 import com.sparta.newsfeedteamproject.entity.Comment;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@AllArgsConstructor
 public class CommentResDto {
     private Long id;
     private String contents;

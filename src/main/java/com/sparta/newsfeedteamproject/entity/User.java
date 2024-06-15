@@ -32,9 +32,6 @@ public class User extends Timestamp {
     private Status status;
     @Column(name = "refresh_token")
     private String refreshToken;
-    @Column(nullable = false, name = "status_mod_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime statusModTime;
 
     public User(String username, String password, String name, String email, String userInfo, Status status) {
         this.username = username;

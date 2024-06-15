@@ -3,12 +3,14 @@ package com.sparta.newsfeedteamproject.dto.feed;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta.newsfeedteamproject.dto.comment.CommentResDto;
 import com.sparta.newsfeedteamproject.entity.Feed;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FeedResDto {
 
