@@ -59,18 +59,19 @@ public class FeedCommentMvcTest {
     private MockMvc mockMvc;
     private Principal mockPrincipal;
     private UserDetailsImpl userDetails;
+    private FeedResDto feedResDto;
+
+    @MockBean
+    private FeedService feedService;
+
+    @MockBean
+    private CommentController commentController;
 
     @Autowired
     private WebApplicationContext context;
 
-    @MockBean
-    private FeedService postService;
-
     @Autowired
     private ObjectMapper objectMapper;
-    private FeedResDto feedResDto;
-    @Autowired
-    private FeedService feedService;
 
     @BeforeEach
     public void setup() {
