@@ -3,7 +3,6 @@ package com.sparta.newsfeedteamproject.mvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.newsfeedteamproject.config.SecurityConfig;
-import com.sparta.newsfeedteamproject.controller.CommentController;
 import com.sparta.newsfeedteamproject.controller.FeedController;
 import com.sparta.newsfeedteamproject.dto.MessageResDto;
 import com.sparta.newsfeedteamproject.dto.comment.CommentResDto;
@@ -12,7 +11,6 @@ import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
-import com.sparta.newsfeedteamproject.service.CommentService;
 import com.sparta.newsfeedteamproject.service.FeedService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,14 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = {FeedController.class, CommentController.class},
+@WebMvcTest(controllers = {FeedController.class},
         excludeFilters = {
                 @ComponentScan.Filter(
                         type = FilterType.ASSIGNABLE_TYPE,
@@ -55,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 )
         })
 @AutoConfigureMockMvc(addFilters = false)
-public class FeedCommentMvcTest {
+public class FeedMvcTest {
 
     private MockMvc mockMvc;
     private Principal mockPrincipal;
@@ -64,9 +61,6 @@ public class FeedCommentMvcTest {
 
     @MockBean
     private FeedService feedService;
-
-    @MockBean
-    private CommentService commentService;
 
     @Autowired
     private WebApplicationContext context;
