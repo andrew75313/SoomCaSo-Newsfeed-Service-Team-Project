@@ -12,6 +12,7 @@ import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.security.UserDetailsImpl;
+import com.sparta.newsfeedteamproject.service.CommentService;
 import com.sparta.newsfeedteamproject.service.FeedService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -65,7 +66,7 @@ public class FeedCommentMvcTest {
     private FeedService feedService;
 
     @MockBean
-    private CommentController commentController;
+    private CommentService commentService;
 
     @Autowired
     private WebApplicationContext context;
