@@ -1,10 +1,8 @@
 package com.sparta.newsfeedteamproject.service;
 
-import com.sparta.newsfeedteamproject.config.RedisConfig;
 import com.sparta.newsfeedteamproject.dto.MessageResDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedReqDto;
 import com.sparta.newsfeedteamproject.dto.feed.FeedResDto;
-import com.sparta.newsfeedteamproject.entity.Feed;
 import com.sparta.newsfeedteamproject.entity.User;
 import com.sparta.newsfeedteamproject.repository.FeedRepository;
 import com.sparta.newsfeedteamproject.repository.UserRepository;

@@ -3,8 +3,10 @@ package com.sparta.newsfeedteamproject.dto.user;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public class UserAuthReqDto {
     @NotBlank(message = "[username:blank] 사용자 아이디를 작성해주세요!")

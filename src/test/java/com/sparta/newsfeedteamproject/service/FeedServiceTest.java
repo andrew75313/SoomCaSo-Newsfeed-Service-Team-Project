@@ -90,7 +90,7 @@ class FeedServiceTest {
         //given
         FeedResDto feedResDto = Mockito.mock(FeedResDto.class);
 
-        given(feedRepository.findById(any(Long.class))).willReturn(Optional.of(feed));
+        when(feedRepository.findById(any(Long.class))).thenReturn(Optional.of(feed));
         when(feed.getUser()).thenReturn(differentUser);
         when(feed.getUser().getId()).thenReturn(1L);
         when(user.getId()).thenReturn(1L);

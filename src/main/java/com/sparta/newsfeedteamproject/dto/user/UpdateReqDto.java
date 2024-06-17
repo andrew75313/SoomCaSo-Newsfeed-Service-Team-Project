@@ -3,8 +3,10 @@ package com.sparta.newsfeedteamproject.dto.user;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public class UpdateReqDto {
     @NotBlank(message = "[password:blank] 비밀번호를 작성해주세요!")
