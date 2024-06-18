@@ -28,12 +28,15 @@ class CommentReqDtoTest {
         CommentReqDto mockCommentReqDto = Mockito.mock(CommentReqDto.class);
         when(mockCommentReqDto.getContents()).thenReturn(contents);
 
-        //when - then
+        //when
         Exception exception = assertThrows(ConstraintViolationException.class, ()->{
             validator.validate(mockCommentReqDto).forEach(violation -> {
                 throw new ConstraintViolationException("Validation failed", null);
             });
         });
+
+        //then
+        assertEquals("Validation failed",exception.getMessage());
     }
 
 }

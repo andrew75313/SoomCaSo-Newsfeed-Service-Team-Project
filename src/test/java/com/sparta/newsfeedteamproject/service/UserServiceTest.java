@@ -1,6 +1,8 @@
 package com.sparta.newsfeedteamproject.service;
 
+import com.sparta.newsfeedteamproject.dto.user.ProfileResDto;
 import com.sparta.newsfeedteamproject.dto.user.SignupReqDto;
+import com.sparta.newsfeedteamproject.dto.user.UpdateReqDto;
 import com.sparta.newsfeedteamproject.dto.user.UserAuthReqDto;
 import com.sparta.newsfeedteamproject.entity.Status;
 import com.sparta.newsfeedteamproject.entity.User;
@@ -15,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -185,5 +188,29 @@ class UserServiceTest {
         //then
         assertEquals(ExceptionMessage.DEATIVATE_USER.getExceptionMessage(),exception.getMessage());
         verify(userRepository,never()).save(differentUser);
+    }
+
+    @Test
+    @DisplayName("프로필 변경")
+    public void editProfile_Ok(){
+        //given
+        this.userSetup();
+        UpdateReqDto reqDto = Mockito.mock(UpdateReqDto.class);
+        when(differentUser.getUsername()).thenReturn("username");
+        when(differentUser.getStatus()).thenReturn(Status.ACTIVATE);
+        when(user.getPassword()).thenReturn("password");
+        when(reqDto.getPassword()).thenReturn("password");
+        when(passwordEncoder.matches(any(String.class),any(String.class))).thenReturn(true);
+        when(reqDto.getNewPassword()).thenReturn("password2");
+
+        when(reqDto.getNewName()).thenReturn("newName");
+        when(reqDto.getNewUserInfo()).thenReturn("newInfo");
+        when(passwordEncoder.encode(any(String.class))).thenReturn("encodedPassword");
+
+        //when
+        userService.editProfile(1L,reqDto,userDetails);
+
+        //then
+        verify(userRepository,times(1)).save(differentUser);
     }
 }

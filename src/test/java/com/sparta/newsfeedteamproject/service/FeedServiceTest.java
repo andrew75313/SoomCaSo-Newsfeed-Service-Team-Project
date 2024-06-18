@@ -116,7 +116,7 @@ class FeedServiceTest {
         });
 
         //then
-        assertEquals(ExceptionMessage.DIFFERENT_WRITER.getExceptionMessage(), exception.getMessage());
+        assertEquals(ExceptionMessage.NON_EXISTENT_ELEMENT.getExceptionMessage(), exception.getMessage());
     }
 
     @Test

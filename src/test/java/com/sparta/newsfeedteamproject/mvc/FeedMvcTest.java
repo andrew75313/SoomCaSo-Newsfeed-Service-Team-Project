@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -75,6 +75,8 @@ public class FeedMvcTest {
                 .build();
     }
 
+    private User testUser;
+
     private void mockResDtoSetup() {
         //Mock ResDto 테스트 설정
         CommentResDto commentResDto = new CommentResDto(1L, "contents", LocalDateTime.now(), LocalDateTime.now(), "username", 1L);
@@ -92,7 +94,7 @@ public class FeedMvcTest {
         String userInfo = "안녕하세요.";
         Status status = Status.ACTIVATE;
         String refreshToken = "";
-        User testUser = new User(username, password, name, email, userInfo, status);
+        testUser = new User(username, password, name, email, userInfo, status);
         userDetails = new UserDetailsImpl(testUser);
         mockPrincipal = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
@@ -122,6 +124,7 @@ public class FeedMvcTest {
                 .andExpect(jsonPath("$.statusCode").value(200))
                 .andExpect(jsonPath("$.message").value("게시물 작성이 완료되었습니다!"))
                 .andDo(print());
+        verify(feedService,times(1)).createFeed(any(FeedReqDto.class),eq(testUser));
 
     }
 

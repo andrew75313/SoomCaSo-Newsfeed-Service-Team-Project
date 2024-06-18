@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommentTest {
+
     @Test
     @DisplayName("comment update test")
     public void test() {
@@ -20,6 +21,7 @@ class CommentTest {
 
         //then
         assertEquals(contents,comment.getContents());
+
     }
 
     @Test
