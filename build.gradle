@@ -33,10 +33,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //jwt
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
@@ -45,6 +45,18 @@ dependencies {
     implementation 'io.lettuce:lettuce-core:6.3.2.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    //test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'com.h2database:h2'
+
+    //Fixture Monkey
+    testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:0.3.2")
+    //테스트에서 jackson을 통한 객체 직렬화.역직렬화 지원
+    testImplementation("com.navercorp.fixturemonkey:fixture-monkey-jackson:0.3.2")
+    //모킹 도구인 mockito의 mock 객체 생성/인터페이스 지원
+    testImplementation("com.navercorp.fixturemonkey:fixture-monkey-mockito:0.3.2")
 }
 
 tasks.named('test') {
